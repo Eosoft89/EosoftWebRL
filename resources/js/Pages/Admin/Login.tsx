@@ -1,41 +1,88 @@
-import React from 'react'
-import { Button, Form} from 'react-bootstrap'
-import { Link } from '@inertiajs/react';
+import LoadingButton from '@/Components/Bootstrap/LoadingButton';
+import LoginLayout from '@/Layouts/LoginLayout';
+import { Head, useForm } from '@inertiajs/react';
+import React, { FormEventHandler } from 'react'
+import { Button, Form, InputGroup} from 'react-bootstrap'
 
-type Props = {}
+type Props = {
+    status?: string;
+    canResetPassword: boolean;
+}
 
-function Login({}: Props) {
+function Login({ status, canResetPassword }: Props) {
+    
+    const {data, setData, post, processing, errors, reset} = useForm({
+        email: '',
+        password: '',
+        remember: false,
+    });
+    
+    const submit: FormEventHandler = (e) => {
+        e.preventDefault();
+        post(route('login'), {
+            onFinish: () => reset('password'),
+        });
+    };
+
     return (
+        
+        <LoginLayout>
+            <Head title="Log in"/>
 
-        <div className="min-vh-100 d-flex flex-column justify-content-center align-items-center pt-6 bg-light dark:bg-dark">
-            
-            <Link href='#'>
-                <img src="storage/images/eosoft_logo.png" width={300} alt="" />
-            </Link>
-            
-            <Form>
+            {status && <div className="mb-4 font-weight-medium text-sm text-success">{status}</div>}
+
+            <Form onSubmit={submit}>
                 <Form.Group className="mb-3" controlId="formBasicEmail">
-                    <Form.Label>Email address</Form.Label>
-                    <Form.Control type="email" placeholder="Enter email" />
+                    <Form.Label>Email</Form.Label>
+                    <InputGroup hasValidation>
+                        <Form.Control 
+                            type="email" 
+                            placeholder="Enter email" 
+                            id="email"
+                            value={data.email}
+                            autoComplete='username'
+                            onChange={(e) => setData('email', e.target.value)}
+                        />
+                        <Form.Control.Feedback type='invalid' tooltip>
+                            {errors.email}
+                        </Form.Control.Feedback>
+                    </InputGroup> 
                     <Form.Text className="text-muted">
-                    We'll never share your email with anyone else.
+                        Nunca compartiremos tu email.
                     </Form.Text>
                 </Form.Group>
 
                 <Form.Group className="mb-3" controlId="formBasicPassword">
                     <Form.Label>Password</Form.Label>
-                    <Form.Control type="password" placeholder="Password" />
+                    <InputGroup hasValidation>
+                        <Form.Control 
+                            type="password" 
+                            placeholder="Password" 
+                            name="password"
+                            value={data.password}
+                            autoComplete='current-password'
+                            onChange={(e) => setData('password', e.target.value)}
+                        />
+                    </InputGroup>
+                    <Form.Control.Feedback type='invalid' tooltip>
+                        {errors.password}
+                    </Form.Control.Feedback>
                 </Form.Group>
-                <Form.Group className="mb-3" controlId="formBasicCheckbox">
-                    <Form.Check type="checkbox" label="Check me out" />
+                    <Form.Group className="mb-3" controlId="formBasicCheckbox">
+                    <Form.Check 
+                        type="checkbox" 
+                        label="Recuérdame"
+                        name='remember'
+                        checked={data.remember}
+                        onChange={(e) => setData('remember', e.target.checked)}
+                    />
                 </Form.Group>
-                <Button variant="primary" type="submit">
-                    Submit
-                </Button>
+                <LoadingButton type='submit' disabled={processing}>
+                    Ingresar
+                </LoadingButton>      
             </Form>
-        </div>
+        </LoginLayout>
 
-        
     );
 }
 
