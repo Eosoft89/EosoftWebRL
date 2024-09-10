@@ -10,7 +10,6 @@ function Welcome({auth}: PageProps) {
         <AdminLayout user={auth.user} header={<h2>Bienvenido {auth.user.name}</h2>}>
             <Head title="Welcome" />
             <main>Hola</main>
-
         </AdminLayout>
     );
 }

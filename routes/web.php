@@ -29,6 +29,8 @@ Route::get('/admin', function () {
     return Inertia::render('Admin/Welcome');
 })->middleware(['auth', 'verified'])->name('admin');
 
+Route::get('/admin/projects', [ProjectController::class, 'adminIndex'])->middleware(['auth', 'verified'])->name('adminProjects');
+
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
