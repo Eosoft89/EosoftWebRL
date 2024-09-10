@@ -1,46 +1,32 @@
 import { useState } from 'react';
-import { Container, Navbar, Offcanvas, Nav } from 'react-bootstrap';
+import { Container, Image, Navbar, NavDropdown, Offcanvas, Nav, ListGroup, NavItem, NavbarBrand } from 'react-bootstrap';
+
+import NavLink from '../NavLink';
+import Home from '@/Pages/Home';
 
 type Props = {}
 
 function Sidebar({}: Props) {
-
-    const [show, setShow] = useState(false);
-
-    const handleClose = () => setShow(false);
-    const handleShow = () => setShow(true);
-
-  return (
-    <>
-      {/* Botón para abrir el menú en dispositivos móviles */}
-      <button className="btn btn-primary d-md-none" onClick={handleShow}>
-        Menú
-      </button>
-
-      {/* Menu lateral Offcanvas */}
-      <Offcanvas show={show} onHide={handleClose} responsive="md">
-        <Offcanvas.Header closeButton>
-          <Offcanvas.Title>Menú Lateral</Offcanvas.Title>
-        </Offcanvas.Header>
-        <Offcanvas.Body>
-          <Nav className="flex-column">
-            <Nav.Link href="#home">Inicio</Nav.Link>
-            <Nav.Link href="#profile">Perfil</Nav.Link>
-            <Nav.Link href="#settings">Configuraciones</Nav.Link>
-          </Nav>
-        </Offcanvas.Body>
-      </Offcanvas>
-
-      {/* Menu lateral visible en pantallas más grandes */}
-      <div className="d-none d-md-block">
-        <Nav className="flex-column bg-light vh-100 p-3">
-          <Nav.Link href="#home">Inicio</Nav.Link>
-          <Nav.Link href="#profile">Perfil</Nav.Link>
-          <Nav.Link href="#settings">Configuraciones</Nav.Link>
-        </Nav>
-      </div>
-    </>
-  );
+    return (
+        <Navbar className='flex-column'>
+            <Navbar.Brand href='#' className='mb-4'>
+                <Image src="storage/images/eosoft_logo.png" roundedCircle width={200}/>
+            </Navbar.Brand>
+            <NavLink href='#' active={false} className='fs-5 m-3 fw-bold text-decoration-none text-dark'>
+                <i className="bi bi-house"/> <span className='ml-1'>Home</span>
+            </NavLink>
+            <NavLink href='#' active={false} className='fs-5 m-3 fw-bold text-decoration-none text-dark'>
+              <i className="bi bi-braces"/> <span className='ml-1'>Proyectos</span>
+            </NavLink>
+            <NavLink href='#' active={false} className='fs-5 m-3 fw-bold text-decoration-none text-dark'>
+              <i className="bi bi-blockquote-left"/> <span className='ml-1'>Artículos</span>
+            </NavLink>
+            <NavDropdown title="Administrador" id="navbarScrollingDropdown" className='fs-6 m-3'>
+              <NavDropdown.Item href="#action3">Configuración</NavDropdown.Item>
+              <NavDropdown.Item href="#action4">Cerrar sesión</NavDropdown.Item>
+            </NavDropdown>  
+        </Navbar>
+    );
 };
 
 export default Sidebar
