@@ -31,6 +31,8 @@ Route::get('/admin', function () {
 
 Route::get('/admin/projects', [ProjectController::class, 'adminIndex'])->middleware(['auth', 'verified'])->name('adminProjects');
 
+Route::get('/admin/projects/create', [ProjectController::class, 'create'])->middleware(['auth', 'verified'])->name('createProject');
+
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');

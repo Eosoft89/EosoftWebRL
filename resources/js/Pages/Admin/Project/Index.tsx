@@ -1,8 +1,9 @@
 import React, { JSXElementConstructor } from 'react'
 import AdminLayout from '@/Layouts/AdminLayout';
 import { PageProps } from '@/types';
-import { Table } from 'react-bootstrap';
-import { Head } from '@inertiajs/react';
+import { Button, Table } from 'react-bootstrap';
+import { Head, Link } from '@inertiajs/react';
+import NavLink from '@/Components/Bootstrap/NavLink';
 
 interface Project {
     id: number;
@@ -32,7 +33,11 @@ function Index ({auth, projects}: Props) {
         <AdminLayout user={auth.user} header={<h2>Bienvenido {auth.user.name}</h2>}>
             <Head title="Proyectos" />
             <main>
-                <p>{auth.user.name}</p>
+
+                <h2 className='mt-3 mb-3'>Proyectos</h2>
+
+                <Link href={route('createProject')} className='btn btn-primary m-2'>Crear nuevo</Link>
+
                 <Table striped bordered hover>
                     <thead>
                         <tr>

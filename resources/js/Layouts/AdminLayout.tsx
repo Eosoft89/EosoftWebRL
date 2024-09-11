@@ -11,10 +11,10 @@ function AdminLayout({user, header, children}: PropsWithChildren<{user: User, he
 
         <Container fluid>
             <Row>
-                <Col xl={2} md={2} className='full-height bg-gray-300'>
+                <Col xl={2} md={2} className='full-height bg-gray-300 fixed-top'>
                 <Sidebar/>
                 </Col>
-                <Col>
+                <Col className='offset-2'>
                     <main>
                         {children}
                     </main>

@@ -20,14 +20,14 @@ class ProjectController extends Controller
 
     public function adminIndex()
     {
-        return Inertia::render('Admin/Projects', ['projects' => Project::all()]);
+        return Inertia::render('Admin/Project/Index', ['projects' => Project::all()]);
     }
     /**
      * Show the form for creating a new resource.
      */
     public function create()
     {
-        //
+        return Inertia::render('Admin/Project/Create');
     }
 
     /**
