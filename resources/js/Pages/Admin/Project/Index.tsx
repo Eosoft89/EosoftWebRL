@@ -14,7 +14,7 @@ interface Props extends PageProps<{projects: Project[]}>{
 
 }
 
-function Projects ({auth, projects}: Props) {
+function Index ({auth, projects}: Props) {
 
     const itemList: JSX.Element[] = [];
 
@@ -50,4 +50,4 @@ function Projects ({auth, projects}: Props) {
     );
 }
 
-export default Projects
+export default Index
