@@ -3,7 +3,7 @@ import AdminLayout from '@/Layouts/AdminLayout';
 import { PageProps } from '@/types';
 import { Button, Table } from 'react-bootstrap';
 import { Head, Link } from '@inertiajs/react';
-import NavLink from '@/Components/Bootstrap/NavLink';
+import { truncateHTML } from '@/utils/functions';
 
 interface Project {
     id: number;
@@ -16,18 +16,6 @@ interface Props extends PageProps<{projects: Project[]}>{
 }
 
 function Index ({auth, projects}: Props) {
-
-    const itemList: JSX.Element[] = [];
-
-    for (let index = 0; index < projects.length; index++) {
-        itemList.push(
-            <tr>
-                <td>{index + 1}</td>
-                <td>{projects[index].title}</td>
-                <td>{projects[index].content}</td>
-            </tr>
-        );
-    }
 
     return (
         <AdminLayout user={auth.user} header={<h2>Bienvenido {auth.user.name}</h2>}>
@@ -47,7 +35,13 @@ function Index ({auth, projects}: Props) {
                         </tr>
                     </thead>
                     <tbody>
-                        {itemList}
+                        {projects.map((project, index) =>
+                            <tr>
+                                <td>{index + 1}</td>
+                                <td>{project.title}</td>
+                                <td>{truncateHTML(project.content, 100)}</td>
+                            </tr>
+                        )}
                     </tbody>
                 </Table>
             </main>

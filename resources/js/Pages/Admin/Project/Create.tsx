@@ -23,7 +23,6 @@ function Create({auth}: PageProps) {
         post(route('storeProject'));
     }
 
-
     return (
         <AdminLayout user={auth.user}>
             <Head title='New Project'/>
@@ -58,7 +57,7 @@ function Create({auth}: PageProps) {
                         Limpiar
                     </Button>
                 </Form>
-                {data.content}
+                <br />
             </div>
             
 

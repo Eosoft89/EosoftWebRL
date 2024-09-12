@@ -23,7 +23,7 @@ function Project({projects}: Props) {
                         <h4>{project.title}</h4>
                         <p>{project.content}</p>
                     </li>
-                )};
+                )}
             </ul>
         </MainLayout>
     );

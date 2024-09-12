@@ -26,6 +26,7 @@
     "dependencies": {
         "bootstrap": "^5.3.3",
         "bootstrap-icons": "^1.11.3",
+        "html-react-parser": "^5.1.16",
         "jodit-react": "^4.1.2",
         "react-bootstrap": "^2.10.4"
     }
