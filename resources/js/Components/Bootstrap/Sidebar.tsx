@@ -3,16 +3,20 @@ import { Container, Image, Navbar, NavDropdown, Offcanvas, Nav, ListGroup, NavIt
 
 import NavLink from '../NavLink';
 import Home from '@/Pages/Home';
+import { usePage } from '@inertiajs/react';
 
 type Props = {}
 
 function Sidebar({}: Props) {
+
+    const brandUrl = `${window.location.origin}/storage/images/eosoft_logo.png`;
+
     return (
         <Navbar className='flex-column'>
-            <Navbar.Brand href='#' className='mb-4'>
-                <Image src="storage/images/eosoft_logo.png" roundedCircle width={200}/>
+            <Navbar.Brand href={route('admin')} className='mb-4'>
+                <Image src={brandUrl} roundedCircle width={200}/>
             </Navbar.Brand>
-            <NavLink href='#' active={false} className='fs-5 m-3 fw-bold text-decoration-none text-dark'>
+            <NavLink href={route('admin')} active={route().current('admin')} className='fs-5 m-3 fw-bold text-decoration-none text-dark'>
                 <i className="bi bi-house"/> <span className='ml-1'>Home</span>
             </NavLink>
             <NavLink href={route('adminProjects')} active={route().current('adminProjects')} className='fs-5 m-3 fw-bold text-decoration-none text-dark'>

@@ -35,7 +35,13 @@ class ProjectController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validated = $request->validate([
+            'title' => 'required|string|min:3',
+            'content' => 'required|min:5',
+        ]);
+
+        Project::create($validated);
+        return redirect()->back()->with('message', 'Formulario con éxito');
     }
 
     /**
