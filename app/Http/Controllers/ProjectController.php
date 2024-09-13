@@ -2,7 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\ProjectRequest;
+use App\Models\Image;
 use App\Models\Project;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
@@ -13,9 +16,8 @@ class ProjectController extends Controller
      */
     public function index()
     {
-        
-        $projects = Project::all();
-        return Inertia::render('Project', ['projects' => $projects]); 
+        $projects = Project::with('cover')->get();
+        return Inertia::render('Project', ['projects' => $this->getProjectsWithCover($projects)]);
     }
 
     public function adminIndex()
@@ -33,15 +35,25 @@ class ProjectController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(ProjectRequest $request)
     {
-        $validated = $request->validate([
-            'title' => 'required|string|min:3',
-            'content' => 'required|min:5',
-        ]);
+        $filename = time().'.'.$request->file->extension();
+        $request->file->storeAs('public/images', $filename);
 
-        Project::create($validated);
-        return redirect()->back()->with('message', 'Formulario con éxito');
+        $image = new Image;
+        $image->name = $request->file->getClientOriginalName();
+        $image->url = $filename;
+        $image->save();
+
+        $project = new Project([
+            'title' => $request->title,
+            'content' => $request->content
+        ]);
+        
+        //dd('Mensaje ID: '. $image->id . ' -  Nombre: ' . $image->name);
+        $project->cover_id = $image->id;
+        $project->save();
+        return redirect()->route('createProject');
     }
 
     /**
@@ -74,5 +86,19 @@ class ProjectController extends Controller
     public function destroy(string $id)
     {
         //
+    }
+
+    private function getProjectsWithCover(Collection $projects){
+        
+        return $projects->map(
+            function ($project){
+                return[
+                    'id' => $project->id,
+                    'title' => $project->title,
+                    'content' => $project->content,
+                    'cover_url' => $project->cover ? asset('storage/images/' . $project->cover->url) : null     
+                ];
+            }
+        )->toArray();
     }
 }

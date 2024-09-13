@@ -10,4 +10,14 @@ class Image extends Model
     use HasFactory;
 
     protected $guarded = [];
+
+    public function articles()
+    {
+        return $this->hasOne(Article::class, 'cover_id');
+    }
+
+    public function projects()
+    {
+        return $this->hasOne(Project::class, 'cover_id');
+    }
 }

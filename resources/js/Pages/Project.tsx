@@ -8,7 +8,8 @@ interface Project {
     id: number;
     title: string;
     content: string;
-}
+    cover_url: string | undefined;
+    }
 
 type Props = {
     projects: Project[]
@@ -24,7 +25,7 @@ function Project({projects}: Props) {
                 {projects.map((project) => 
                 <Col lg={3} md={6} xs={12} className='bg-success p-1 d-flex justify-content-center align-items-center'>
                     <Card style={{ width: '20rem', height:'32rem' }} >
-                        <Card.Img variant="top" src="holder.js/100px180" />
+                        <Card.Img variant="top" src={project.cover_url} alt={'Portada del proyecto' + project.title}/>
                         <Card.Body>
                             <Card.Title>{project.title}</Card.Title>
                             <Card.Text>

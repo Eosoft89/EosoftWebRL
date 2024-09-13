@@ -17,6 +17,9 @@ return new class extends Migration
             $table->unsignedBigInteger('taggable_id');
             $table->string('taggable_type');
             $table->timestamps();
+
+            $table->unique(['tag_id', 'taggable_id', 'taggable_type']);
+            $table->foreign('tag_id')->references('id')->on('tags')->onDelete('cascade');
         });
     }
 
