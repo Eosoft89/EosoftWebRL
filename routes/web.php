@@ -29,6 +29,7 @@ Route::get('/admin', function () {
     return Inertia::render('Admin/Welcome');
 })->middleware(['auth', 'verified'])->name('admin');
 
+Route::get('/projects/{id}', [ProjectController::class, 'show'])->name('projectDetail');
 Route::get('/admin/projects', [ProjectController::class, 'adminIndex'])->middleware(['auth', 'verified'])->name('adminProjects');
 
 Route::get('/admin/projects/create', [ProjectController::class, 'create'])->middleware(['auth', 'verified'])->name('createProject');

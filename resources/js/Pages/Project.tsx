@@ -1,6 +1,7 @@
+import NavLink from '@/Components/Bootstrap/NavLink';
 import MainLayout from '@/Layouts/MainLayout';
 import { truncateHTML } from '@/utils/functions';
-import { Head } from '@inertiajs/react';
+import { Head, Link } from '@inertiajs/react';
 import React from 'react';
 import { Button, Card, Col, Row } from 'react-bootstrap';
 
@@ -31,7 +32,7 @@ function Project({projects}: Props) {
                             <Card.Text>
                                 {truncateHTML(project.content, 100)}
                             </Card.Text>
-                            <Button variant="primary">Go somewhere</Button>
+                            <Link href={route('projectDetail', project.id)} className='btn btn-primary'>Ver más</Link>
                         </Card.Body>
                     </Card>
                 </Col>

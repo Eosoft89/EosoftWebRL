@@ -9,6 +9,8 @@ use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
+use function PHPUnit\Framework\returnSelf;
+
 class ProjectController extends Controller
 {
     /**
@@ -37,12 +39,12 @@ class ProjectController extends Controller
      */
     public function store(ProjectRequest $request)
     {
-        $filename = time().'.'.$request->file->extension();
-        $request->file->storeAs('public/images', $filename);
+        $file_url = time().'.'.$request->file->extension();
+        $request->file->storeAs('public/images', $file_url);
 
         $image = new Image;
         $image->name = $request->file->getClientOriginalName();
-        $image->url = $filename;
+        $image->url = $file_url;
         $image->save();
 
         $project = new Project([
@@ -61,7 +63,13 @@ class ProjectController extends Controller
      */
     public function show(string $id)
     {
-        //
+        $project = Project::with('cover')->findOrFail($id);
+
+        return Inertia::render('ProjectDetail', [
+            'title' => $project->title,
+            'content' => $project->content,
+            'cover_url' => $project->cover ? asset('storage/images/' . $project->cover->url) : null 
+        ]);
     }
 
     /**

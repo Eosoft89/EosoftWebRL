@@ -1,7 +1,7 @@
 import NavLink from '@/Components/Bootstrap/NavLink';
 import { Link } from '@inertiajs/react';
 import React from 'react'
-import { Nav, Navbar, Container, NavDropdown } from 'react-bootstrap';
+import { Nav, Navbar, Container, NavDropdown, Form, Button } from 'react-bootstrap';
 
 type Props = {
     children: React.ReactNode;
@@ -19,18 +19,24 @@ function MainLayout({children}: Props) {
                 <NavLink href={route('home')} active={route().current('home')}><h5 className='mr-2'>Inicio</h5></NavLink>
                 <NavLink href={route('projects')} active={route().current('projects')}><h5 className='mr-2'>Proyectos</h5></NavLink>
                 <NavLink href={route('projects')} active={route().current('projects')}><h5 className='mr-2'>Artículos</h5></NavLink>
-                <NavDropdown title="Dropdown" id="basic-nav-dropdown">
-                <NavDropdown.Item href="#action/3.1">Action</NavDropdown.Item>
-                <NavDropdown.Item href="#action/3.2">
-                    Another action
-                </NavDropdown.Item>
-                <NavDropdown.Item href="#action/3.3">Something</NavDropdown.Item>
-                <NavDropdown.Divider />
-                <NavDropdown.Item href="#action/3.4">
-                    Separated link
-                </NavDropdown.Item>
-                </NavDropdown>
+              
             </Nav>
+            <Form className="d-flex">
+            <Form.Control
+              type="search"
+              placeholder="Buscar"
+              className="me-2"
+              aria-label="Search"
+            />
+            <Button variant="outline-success">Buscar</Button>
+            </Form>
+            </Navbar.Collapse>
+            <Navbar.Collapse className="justify-content-end">
+                <Nav>
+                    <NavLink href={route('admin')} active={false}>
+                    <i className="bi bi-gear-fill"></i> Admin 
+                    </NavLink>
+                </Nav> 
             </Navbar.Collapse>
         </Container>
         </Navbar>
