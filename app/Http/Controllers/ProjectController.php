@@ -31,7 +31,7 @@ class ProjectController extends Controller
      */
     public function create()
     {
-        return Inertia::render('Admin/Project/Create');
+        return Inertia::render('Admin/Project/Create', ['images' => Image::getAllWithUrl()]);
     }
 
     /**

@@ -20,4 +20,18 @@ class Image extends Model
     {
         return $this->hasOne(Project::class, 'cover_id');
     }
+
+    public static function getAllWithUrl(){
+        $images = Image::all();
+        return $images->map(
+            function ($image){
+                return [
+                    'id' => $image->id,
+                    'name' => $image->name,
+                    'url' => asset('storage/images/' . $image->url)
+                ];
+            }
+        );
+    }
+
 }

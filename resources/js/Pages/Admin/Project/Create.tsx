@@ -3,7 +3,7 @@ import JoditEditor from 'jodit-react';
 import AdminLayout from '@/Layouts/AdminLayout';
 import { PageProps } from '@/types';
 import { Head, useForm } from '@inertiajs/react';
-import { Accordion, Button, Form } from 'react-bootstrap';
+import { Accordion, Button, Card, Col, Form, Image, Row } from 'react-bootstrap';
 import LoadingButton from '@/Components/Bootstrap/LoadingButton';
 
 
@@ -13,7 +13,14 @@ interface FormProps {
     file: File | undefined;
 }
 
-function Create({auth}: PageProps) {
+type Image = {
+    url: string;
+}
+interface Props extends PageProps {
+    images: Image[];
+}
+
+function Create({auth, images}: Props) {
 
     const editor = useRef(null);
     const{data, setData, post, processing, errors } = useForm<FormProps>({
@@ -31,6 +38,15 @@ function Create({auth}: PageProps) {
     const submit: FormEventHandler = (e) => {
         e.preventDefault();
         post(route('storeProject'));
+    }
+
+    const copyToClipboard = async (text: string) => {
+        try {
+            await navigator.clipboard.writeText(text);
+            alert('Texto copiado al portapapeles')
+        } catch (error) {
+            alert('Error: ' + error);
+        }
     }
 
     return (
@@ -83,13 +99,22 @@ function Create({auth}: PageProps) {
                     <Accordion.Item eventKey="0">
                         <Accordion.Header>Imágenes del sistema</Accordion.Header>
                         <Accordion.Body>
-                        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-                        eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad
-                        minim veniam, quis nostrud exercitation ullamco laboris nisi ut
-                        aliquip ex ea commodo consequat. Duis aute irure dolor in
-                        reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla
-                        pariatur. Excepteur sint occaecat cupidatat non proident, sunt in
-                        culpa qui officia deserunt mollit anim id est laborum.
+                            <Row>
+
+                            { images.map(image => 
+                                <Col lg={2} md={6} xs={12} className='p-1 d-flex justify-content-center align-items-center'>
+                                    <Card style={{ width: '14rem'}}>
+                                    <Card.Img variant="top" src={image.url}/>
+                                    <Card.Body>
+                                        <Card.Text style={{fontSize: 12 }}>
+                                            <b>Link: </b>{image.url}
+                                        </Card.Text>
+                                        <Button variant="primary" onClick={() => copyToClipboard(image.url)}>Copiar link</Button>
+                                    </Card.Body>
+                                    </Card>
+                                </Col>
+                            )}
+                            </Row>
                         </Accordion.Body>
                     </Accordion.Item>
                 </Accordion>
