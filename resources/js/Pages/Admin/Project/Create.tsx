@@ -1,4 +1,4 @@
-import {useState, useRef, FormEventHandler, ChangeEvent, useEffect} from 'react'
+import {useState, useRef, FormEventHandler, ChangeEvent, useEffect, useMemo} from 'react'
 import JoditEditor from 'jodit-react';
 import AdminLayout from '@/Layouts/AdminLayout';
 import { PageProps } from '@/types';
@@ -32,6 +32,14 @@ function Create({auth, images, project}: Props) {
         file: undefined
     });
 
+    const joditConfig = useMemo(
+        () => ({
+            readonly: false,
+            placeholder: project ? '' : 'Contenido...' 
+        }),
+        []
+    );
+
     useEffect(() => {
         if(project){
             setData({
@@ -56,7 +64,6 @@ function Create({auth, images, project}: Props) {
         else{
             post(route('storeProject'));
         }
-        
     }
 
     const copyToClipboard = async (text: string) => {
@@ -100,6 +107,7 @@ function Create({auth, images, project}: Props) {
                             ref={editor}
                             value={data.content}
                             onChange={newContent => setData('content', newContent)}
+                            config={joditConfig}
                         />
                         {errors.content && <div>{errors.content}</div>}
                     </Form.Group>
