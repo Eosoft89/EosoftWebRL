@@ -40,7 +40,7 @@ function Index ({auth, projects}: Props) {
                                 <td key='cover' align='center' className='align-middle'><Image src={project.cover_url} width={80} /></td>
                                 <td key='title' className='align-middle'>{project.title}</td>
                                 <td key='content' className='align-middle'>{truncateHTML(project.content, 100)}</td>
-                                <td key='edit' align='center' className='align-middle'><Link href='#' className='btn btn-primary'>Editar</Link></td>
+                                <td key='edit' align='center' className='align-middle'><Link href={route('editProject', project.id)} className='btn btn-primary'>Editar</Link></td>
                                 <td key='delete' align='center' className='align-middle'><Link href='#' className='btn btn-danger'>Eliminar</Link></td>
                             </tr>
                         )}

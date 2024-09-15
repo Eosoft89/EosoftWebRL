@@ -1,10 +1,11 @@
-import {useState, useRef, FormEventHandler, ChangeEvent} from 'react'
+import {useState, useRef, FormEventHandler, ChangeEvent, useEffect} from 'react'
 import JoditEditor from 'jodit-react';
 import AdminLayout from '@/Layouts/AdminLayout';
 import { PageProps } from '@/types';
 import { Head, useForm } from '@inertiajs/react';
 import { Accordion, Button, Card, Col, Form, Image, Row } from 'react-bootstrap';
 import LoadingButton from '@/Components/Bootstrap/LoadingButton';
+import { ProjectProps } from '@/types/types';
 
 
 interface FormProps {
@@ -18,16 +19,28 @@ type Image = {
 }
 interface Props extends PageProps {
     images: Image[];
+    project?: ProjectProps
 }
 
-function Create({auth, images}: Props) {
+function Create({auth, images, project}: Props) {
 
     const editor = useRef(null);
-    const{data, setData, post, processing, errors } = useForm<FormProps>({
+
+    const{data, setData, post, patch, processing, errors } = useForm<FormProps>({
         title: '',
         content: '',
         file: undefined
     });
+
+    useEffect(() => {
+        if(project){
+            setData({
+                title: project.title || '',
+                content: project.content || '',
+                file: undefined
+            });
+        }
+    }, [project]);
 
     function handleFile(e: ChangeEvent<HTMLInputElement>) : void {
         if (e.currentTarget.files){
@@ -35,9 +48,15 @@ function Create({auth, images}: Props) {
         }
     }
 
-    const submit: FormEventHandler = (e) => {
+    const handleSubmit: FormEventHandler = (e) => {
         e.preventDefault();
-        post(route('storeProject'));
+        if(project){
+            patch(route('updateProject', project.id));
+        }
+        else{
+            post(route('storeProject'));
+        }
+        
     }
 
     const copyToClipboard = async (text: string) => {
@@ -55,7 +74,7 @@ function Create({auth, images}: Props) {
             <h2 className='mt-3 mb-3'>Nuevo proyecto</h2>
 
             <div className="p-4 shadow-md rounded-lg">
-                <Form onSubmit={submit} method='POST' encType='multipart/form-data'>
+                <Form onSubmit={handleSubmit}>
                     <Form.Group className="mb-3" controlId="TitleInput">
                         <Form.Label>Título</Form.Label>
                         <Form.Control 
@@ -85,7 +104,7 @@ function Create({auth, images}: Props) {
                         {errors.content && <div>{errors.content}</div>}
                     </Form.Group>
                     <LoadingButton type='submit' disabled={processing}>
-                        Registrar
+                        {project ? 'Actualizar' : 'Registrar'}
                     </LoadingButton>   
                     <Button variant='danger ml-1'>
                         Limpiar
@@ -119,7 +138,6 @@ function Create({auth, images}: Props) {
                     </Accordion.Item>
                 </Accordion>
             </div>
-            
         </AdminLayout>
     )
 }

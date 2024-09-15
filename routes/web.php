@@ -30,11 +30,16 @@ Route::get('/admin', function () {
 })->middleware(['auth', 'verified'])->name('admin');
 
 Route::get('/projects/{id}', [ProjectController::class, 'show'])->name('projectDetail');
+
 Route::get('/admin/projects', [ProjectController::class, 'adminIndex'])->middleware(['auth', 'verified'])->name('adminProjects');
 
 Route::get('/admin/projects/create', [ProjectController::class, 'create'])->middleware(['auth', 'verified'])->name('createProject');
 
 Route::post('/admin/projects/create', [ProjectController::class, 'store'])->name('storeProject');
+
+Route::get('/admin/projects/edit/{id}', [ProjectController::class, 'edit'])->middleware(['auth', 'verified'])->name('editProject');
+
+Route::patch('/admin/projects/{id}', [ProjectController::class, 'update'])->middleware(['auth', 'verified'])->name('updateProject');
 
 
 Route::middleware('auth')->group(function () {

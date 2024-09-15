@@ -78,15 +78,16 @@ class ProjectController extends Controller
      */
     public function edit(string $id)
     {
-        //
+        return Inertia::render('Admin/Project/Create', ['images' => Image::getAllWithUrl(), 'project' => Project::with('cover')->findOrFail($id)]);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(ProjectRequest $request, string $id)
     {
-        //
+        Project::findOrFail($id)->update($request);
+        return redirect()->route('adminProjects')->with('success', 'Proyecto actualizado correctamente.');
     }
 
     /**
