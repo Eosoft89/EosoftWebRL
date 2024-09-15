@@ -24,7 +24,8 @@ class ProjectController extends Controller
 
     public function adminIndex()
     {
-        return Inertia::render('Admin/Project/Index', ['projects' => Project::all()]);
+        $projects = Project::with('cover')->get();
+        return Inertia::render('Admin/Project/Index', ['projects' => $this->getProjectsWithCover($projects)]);
     }
     /**
      * Show the form for creating a new resource.

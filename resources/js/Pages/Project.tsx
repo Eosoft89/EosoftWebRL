@@ -1,19 +1,13 @@
 import NavLink from '@/Components/Bootstrap/NavLink';
 import MainLayout from '@/Layouts/MainLayout';
+import { ProjectProps } from '@/types/types';
 import { truncateHTML } from '@/utils/functions';
 import { Head, Link } from '@inertiajs/react';
 import React from 'react';
 import { Button, Card, Col, Row } from 'react-bootstrap';
 
-interface Project {
-    id: number;
-    title: string;
-    content: string;
-    cover_url: string | undefined;
-    }
-
 type Props = {
-    projects: Project[]
+    projects: ProjectProps[];
 }
 
 function Project({projects}: Props) {
