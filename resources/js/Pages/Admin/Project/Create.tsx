@@ -3,9 +3,10 @@ import JoditEditor from 'jodit-react';
 import AdminLayout from '@/Layouts/AdminLayout';
 import { PageProps } from '@/types';
 import { Head, useForm } from '@inertiajs/react';
-import { Accordion, Button, Card, Col, Form, Image, Row } from 'react-bootstrap';
+import { Accordion, Button, Card, Col, Form, Image, Row, Toast, ToastContainer } from 'react-bootstrap';
 import LoadingButton from '@/Components/Bootstrap/LoadingButton';
 import { ProjectProps } from '@/types/types';
+import ToastMessage from '@/Components/Bootstrap/ToastMessage';
 
 
 interface FormProps {
@@ -26,6 +27,9 @@ interface Props extends PageProps {
 function Create({auth, images, project}: Props) {
 
     const editor = useRef(null);
+
+    const[showToast, setShowToast] = useState(false);
+    const handleHideToast = () => setShowToast(false);
 
     const{data, setData, post, processing, errors, reset } = useForm<FormProps>({
         title: project?.title || '',
@@ -84,7 +88,7 @@ function Create({auth, images, project}: Props) {
     const copyToClipboard = async (text: string) => {
         try {
             await navigator.clipboard.writeText(text);
-            alert('Texto copiado al portapapeles')
+            setShowToast(true);
         } catch (error) {
             alert('Error: ' + error);
         }
@@ -140,7 +144,6 @@ function Create({auth, images, project}: Props) {
                         <Accordion.Header>Imágenes del sistema</Accordion.Header>
                         <Accordion.Body>
                             <Row>
-
                             { images.map(image => 
                                 <Col lg={2} md={6} xs={12} className='p-1 d-flex justify-content-center align-items-center' key={image.id}>
                                     <Card style={{ width: '14rem'}}>
@@ -157,8 +160,11 @@ function Create({auth, images, project}: Props) {
                             </Row>
                         </Accordion.Body>
                     </Accordion.Item>
-                </Accordion>
+                </Accordion>    
             </div>
+            <ToastMessage title='Copiado!' showToast={showToast} onClose={handleHideToast}>
+                Copiado al portapapes.
+            </ToastMessage>
         </AdminLayout>
     )
 }
