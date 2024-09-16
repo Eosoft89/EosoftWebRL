@@ -11,10 +11,11 @@ import { ProjectProps } from '@/types/types';
 interface FormProps {
     title: string;
     content: string;
-    file: File | undefined;
+    file: File | null;
 }
 
 type Image = {
+    id: number;
     url: string;
 }
 interface Props extends PageProps {
@@ -26,10 +27,10 @@ function Create({auth, images, project}: Props) {
 
     const editor = useRef(null);
 
-    const{data, setData, post, patch, processing, errors } = useForm<FormProps>({
-        title: '',
-        content: '',
-        file: undefined
+    const{data, setData, post, processing, errors, reset } = useForm<FormProps>({
+        title: project?.title || '',
+        content: project?.content || '',
+        file: null
     });
 
     const joditConfig = useMemo(
@@ -45,7 +46,7 @@ function Create({auth, images, project}: Props) {
             setData({
                 title: project.title || '',
                 content: project.content || '',
-                file: undefined
+                file: null
             });
         }
     }, [project]);
@@ -58,11 +59,25 @@ function Create({auth, images, project}: Props) {
 
     const handleSubmit: FormEventHandler = (e) => {
         e.preventDefault();
+        const formData = new FormData();
+        formData.append('title', data.title);
+        formData.append('content', data.content);
+        
+        if (data.file) {
+            formData.append('file', data.file);
+        }
+
         if(project){
-            patch(route('updateProject', project.id));
+            post(route('updateProject', project.id), {
+                forceFormData: true,
+                preserveState: true,
+                preserveScroll: true
+            });
         }
         else{
-            post(route('storeProject'));
+            post(route('storeProject'), {
+                forceFormData: true
+            });
         }
     }
 
@@ -77,8 +92,8 @@ function Create({auth, images, project}: Props) {
 
     return (
         <AdminLayout user={auth.user}>
-            <Head title='New Project'/>
-            <h2 className='mt-3 mb-3'>Nuevo proyecto</h2>
+            <Head title={ project ? 'Editar proyecto' : 'Nuevo proyecto'}/>
+            <h2 className='mt-3 mb-3'>{ project ? 'Editar proyecto' : 'Nuevo proyecto'}</h2>
 
             <div className="p-4 shadow-md rounded-lg">
                 <Form onSubmit={handleSubmit}>
@@ -87,19 +102,17 @@ function Create({auth, images, project}: Props) {
                         <Form.Control 
                             type="text" 
                             placeholder="Nuevo proyecto"
-                            id="title"
                             value={data.title}
                             onChange={(e) => setData('title', e.target.value)}
                         />
-                        {errors.title && <div>{errors.title}</div>}
+                        {errors.title && <div className='text-danger'>{errors.title}</div>}
                     </Form.Group>
-                    <Form.Group controlId="formFileMultiple" className="mb-3">
+                    <Form.Group controlId="formFile" className="mb-3">
                         <Form.Label>Portada</Form.Label>
                         <Form.Control 
                             type='file'
-                            id='file'
                             onChange={handleFile}/>
-                        
+                        {errors.file && <div className="text-danger">{errors.file}</div>}
                     </Form.Group>
                     <Form.Group className="mb-3" controlId="ContentInput">
                         <Form.Label>Contenido</Form.Label>
@@ -109,12 +122,12 @@ function Create({auth, images, project}: Props) {
                             onChange={newContent => setData('content', newContent)}
                             config={joditConfig}
                         />
-                        {errors.content && <div>{errors.content}</div>}
+                        {errors.content && <div className='text-danger'>{errors.content}</div>}
                     </Form.Group>
                     <LoadingButton type='submit' disabled={processing}>
                         {project ? 'Actualizar' : 'Registrar'}
                     </LoadingButton>   
-                    <Button variant='danger ml-1'>
+                    <Button variant='danger ml-1' onClick={() => reset()}>
                         Limpiar
                     </Button>
                 </Form>
@@ -129,7 +142,7 @@ function Create({auth, images, project}: Props) {
                             <Row>
 
                             { images.map(image => 
-                                <Col lg={2} md={6} xs={12} className='p-1 d-flex justify-content-center align-items-center'>
+                                <Col lg={2} md={6} xs={12} className='p-1 d-flex justify-content-center align-items-center' key={image.id}>
                                     <Card style={{ width: '14rem'}}>
                                     <Card.Img variant="top" src={image.url}/>
                                     <Card.Body>

@@ -39,7 +39,7 @@ Route::post('/admin/projects/create', [ProjectController::class, 'store'])->name
 
 Route::get('/admin/projects/edit/{id}', [ProjectController::class, 'edit'])->middleware(['auth', 'verified'])->name('editProject');
 
-Route::patch('/admin/projects/{id}', [ProjectController::class, 'update'])->middleware(['auth', 'verified'])->name('updateProject');
+Route::post('/admin/projects/edit/{id}', [ProjectController::class, 'update'])->name('updateProject');
 
 
 Route::middleware('auth')->group(function () {

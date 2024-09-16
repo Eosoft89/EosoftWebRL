@@ -35,7 +35,7 @@ function Index ({auth, projects}: Props) {
                     </thead>
                     <tbody>
                         {projects.map((project, index) =>
-                            <tr>
+                            <tr key={project.id}>
                                 <td key='index' align='center' className='align-middle'>{index + 1}</td>
                                 <td key='cover' align='center' className='align-middle'><Image src={project.cover_url} width={80} /></td>
                                 <td key='title' className='align-middle'>{project.title}</td>
