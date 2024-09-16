@@ -1,4 +1,5 @@
 import Sidebar from '@/Components/Bootstrap/Sidebar';
+import SidebarClaude from '@/Components/Bootstrap/SidebarClaude';
 import { User } from '@/types';
 import React, { PropsWithChildren, ReactNode, useState } from 'react'
 import { Nav, Navbar, Container, Offcanvas, Button, Col, Row } from 'react-bootstrap';
@@ -22,6 +23,18 @@ function AdminLayout({user, header, children}: PropsWithChildren<{user: User, he
             </Row>
                     
         </Container>
+
+        /*<Container fluid>
+        <Row>
+            <Col md={3} lg={2} className="px-0">
+            <SidebarClaude/>
+            </Col>
+            <Col md={9} lg={10} className="ms-sm-auto px-md-4">
+                <main>{children}</main>
+            </Col>
+        </Row>
+        </Container>*/
+        
     );
         
 }
