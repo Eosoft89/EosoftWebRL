@@ -2,6 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Article;
+use App\Models\Image;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
@@ -12,7 +15,8 @@ class ArticleController extends Controller
      */
     public function index()
     {
-        return Inertia::render('Articles');
+        $articles = Article::with('cover')->get();
+        return Inertia::render('Admin/Article/Index', ['articles' => $this->getArticlesWithCover($articles)]);
     }
 
     /**
@@ -20,7 +24,7 @@ class ArticleController extends Controller
      */
     public function create()
     {
-        //
+        return Inertia::render('Admin/Article/Create', ['images' => Image::getAllWithUrl()]);
     }
 
     /**
@@ -61,5 +65,19 @@ class ArticleController extends Controller
     public function destroy(string $id)
     {
         //
+    }
+
+    private function getArticlesWithCover(Collection $articles){
+        
+        return $articles->map(
+            function ($article){
+                return[
+                    'id' => $article->id,
+                    'title' => $article->title,
+                    'content' => $article->content,
+                    'cover_url' => $article->cover ? asset('storage/images/' . $article->cover->url) : null     
+                ];
+            }
+        )->toArray();
     }
 }

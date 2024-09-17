@@ -24,7 +24,7 @@ function Sidebar({}: Props) {
             <NavLink href={route('admin.projects')} active={route().current('admin.projects')} className='fs-5 m-3 fw-bold text-decoration-none text-dark'>
               <i className="bi bi-braces"/> <span className='ml-1'>Proyectos</span>
             </NavLink>
-            <NavLink href='#' active={false} className='fs-5 m-3 fw-bold text-decoration-none text-dark'>
+            <NavLink href={route('admin.articles')} active={route().current('admin.articles')} className='fs-5 m-3 fw-bold text-decoration-none text-dark'>
               <i className="bi bi-blockquote-left"/> <span className='ml-1'>Artículos</span>
             </NavLink>
             <NavLink href={route('home')} active={false} className='fs-5 m-3 fw-bold text-decoration-none text-dark'>
