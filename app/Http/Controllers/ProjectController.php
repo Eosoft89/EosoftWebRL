@@ -19,13 +19,8 @@ class ProjectController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
-    {
-        $projects = Project::with('cover')->get();
-        return Inertia::render('Project', ['projects' => $this->getProjectsWithCover($projects)]);
-    }
 
-    public function adminIndex()
+    public function index()
     {
         $projects = Project::with('cover')->get();
         return Inertia::render('Admin/Project/Index', ['projects' => $this->getProjectsWithCover($projects)]);

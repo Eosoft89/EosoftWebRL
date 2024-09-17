@@ -4,3 +4,5 @@ export interface ProjectProps {
     content: string;
     cover_url: string | undefined;
 }
+
+export interface ArticleProps extends ProjectProps {}

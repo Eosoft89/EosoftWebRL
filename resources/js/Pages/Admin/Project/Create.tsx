@@ -3,11 +3,10 @@ import JoditEditor from 'jodit-react';
 import AdminLayout from '@/Layouts/AdminLayout';
 import { PageProps } from '@/types';
 import { Head, useForm } from '@inertiajs/react';
-import { Accordion, Button, Card, Col, Form, Image, Row, Toast, ToastContainer } from 'react-bootstrap';
+import { Accordion, Button, Card, Col, Form, Image, Row } from 'react-bootstrap';
 import LoadingButton from '@/Components/Bootstrap/LoadingButton';
 import { ProjectProps } from '@/types/types';
 import ToastMessage from '@/Components/Bootstrap/ToastMessage';
-
 
 interface FormProps {
     title: string;
@@ -72,14 +71,14 @@ function Create({auth, images, project}: Props) {
         }
 
         if(project){
-            post(route('updateProject', project.id), {
+            post(route('project.update', project.id), {
                 forceFormData: true,
                 preserveState: true,
                 preserveScroll: true
             });
         }
         else{
-            post(route('storeProject'), {
+            post(route('project.store'), {
                 forceFormData: true
             });
         }

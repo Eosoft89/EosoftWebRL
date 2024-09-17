@@ -1,16 +1,21 @@
 <?php
 
+use App\Http\Controllers\ArticleController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ProjectController;
+use App\Http\Controllers\WebsiteController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
-Route::get('/', function() {
-    return Inertia::render('Home');
-})->name('home');
 
-Route::get('/projects', [ProjectController::class, 'index'])->name('projects');
+Route::controller(WebsiteController::class)->group(function(){
+    Route::get('/', 'index')->name('home');
+    Route::get('/projects', 'projects')->name('projects');
+    Route::get('/articles', 'articles')->name('articles');
+    Route::get('/projects/{id}', 'showProject')->name('project.detail');
+    Route::get('/articles/{id}', 'showArticle')->name('article.detail');
+});
 
 Route::get('/welcome', function () {
     return Inertia::render('Welcome', [
@@ -29,18 +34,21 @@ Route::get('/admin', function () {
     return Inertia::render('Admin/Welcome');
 })->middleware(['auth', 'verified'])->name('admin');
 
-Route::get('/projects/{id}', [ProjectController::class, 'show'])->name('projectDetail');
+Route::middleware(['auth', 'verified'])->controller(ProjectController::class)->group(function(){
+    Route::get('/admin/projects', 'index')->name('admin.projects');
+    Route::get('/admin/projects/create', 'create')->name('project.create');
+    Route::post('/admin/projects/create', 'store')->name('project.store');
+    Route::get('/admin/projects/edit/{id}', 'edit')->name('project.edit');
+    Route::post('/admin/projects/edit/{id}', 'update')->name('project.update');
+});
 
-Route::get('/admin/projects', [ProjectController::class, 'adminIndex'])->middleware(['auth', 'verified'])->name('adminProjects');
-
-Route::get('/admin/projects/create', [ProjectController::class, 'create'])->middleware(['auth', 'verified'])->name('createProject');
-
-Route::post('/admin/projects/create', [ProjectController::class, 'store'])->name('storeProject');
-
-Route::get('/admin/projects/edit/{id}', [ProjectController::class, 'edit'])->middleware(['auth', 'verified'])->name('editProject');
-
-Route::post('/admin/projects/edit/{id}', [ProjectController::class, 'update'])->name('updateProject');
-
+Route::middleware(['auth', 'verified'])->controller(ArticleController::class)->group(function(){
+    Route::get('/admin/articles', 'index')->name('admin.articles');
+    Route::get('/admin/articles/create', 'create')->name('article.create');
+    Route::post('/admin/articles/create', 'store')->name('article.store');
+    Route::get('/admin/articles/edit/{id}', 'edit')->name('article.edit');
+    Route::post('/admin/articles/edit/{id}', 'update')->name('article.update');
+});
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');

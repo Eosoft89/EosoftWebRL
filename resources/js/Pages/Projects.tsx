@@ -10,7 +10,7 @@ type Props = {
     projects: ProjectProps[];
 }
 
-function Project({projects}: Props) {
+function Projects({projects}: Props) {
 
     return (
         <MainLayout>
@@ -26,7 +26,7 @@ function Project({projects}: Props) {
                             <Card.Text>
                                 {truncateHTML(project.content, 100)}
                             </Card.Text>
-                            <Link href={route('projectDetail', project.id)} className='btn btn-primary'>Ver más</Link>
+                            <Link href={route('project.detail', project.id)} className='btn btn-primary'>Ver más</Link>
                         </Card.Body>
                     </Card>
                 </Col>
@@ -37,4 +37,4 @@ function Project({projects}: Props) {
     );
 }
 
-export default Project;
+export default Projects;

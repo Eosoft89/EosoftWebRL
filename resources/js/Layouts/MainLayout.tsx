@@ -18,7 +18,7 @@ function MainLayout({children}: Props) {
             <Nav className="me-auto">
                 <NavLink href={route('home')} active={route().current('home')}><h5 className='mr-2'>Inicio</h5></NavLink>
                 <NavLink href={route('projects')} active={route().current('projects')}><h5 className='mr-2'>Proyectos</h5></NavLink>
-                <NavLink href={route('projects')} active={route().current('projects')}><h5 className='mr-2'>Artículos</h5></NavLink>
+                <NavLink href={route('articles')} active={route().current('articles')}><h5 className='mr-2'>Artículos</h5></NavLink>
               
             </Nav>
             <Form className="d-flex">
