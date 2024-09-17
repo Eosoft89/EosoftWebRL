@@ -71,14 +71,14 @@ function Create({auth, images, article}: Props) {
         }
 
         if(article){
-            post(route('updateProject', article.id), {
+            post(route('article.update', article.id), {
                 forceFormData: true,
                 preserveState: true,
                 preserveScroll: true
             });
         }
         else{
-            post(route('storeProject'), {
+            post(route('article.store'), {
                 forceFormData: true
             });
         }
