@@ -22,10 +22,18 @@ class ArticleRequest extends FormRequest
      */
     public function rules(): array
     {
-        return [
+        $rules = [
             'title' => ['required','string', 'min:3'],
-            'content' => ['required', 'min:10'],
-            'file' => ['required', File::image()->max(10*1024)]
+            'content' => ['required', 'min:10']
         ];
+
+        if ($this->routeIs('article.store')){
+            $rules['file'] = ['required', File::image()->max(10*1024)];
+        }
+        else if ($this->routeIs('article.update')){
+            $rules['file'] = ['nullable', File::image()->max(10*1024)];
+        }
+
+        return $rules;
     }
 }
