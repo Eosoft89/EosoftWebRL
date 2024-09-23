@@ -5,7 +5,7 @@ namespace App\Http\Requests;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rules\File;
 
-class ProjectRequest extends FormRequest
+class ArticleRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -22,18 +22,10 @@ class ProjectRequest extends FormRequest
      */
     public function rules(): array
     {
-        $rules = [
+        return [
             'title' => ['required','string', 'min:3'],
-            'content' => ['required', 'min:10']
+            'content' => ['required', 'min:10'],
+            'file' => ['required', File::image()->max(10*1024)]
         ];
-
-        if ($this->routeIs('project.store')){
-            $rules['file'] = ['required', File::image()->max(10*1024)];
-        }
-        else if ($this->routeIs('project.update')){
-            $rules['file'] = ['nullable', File::image()->max(10*1024)];
-        }
-
-        return $rules;
     }
 }

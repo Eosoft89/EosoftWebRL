@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\ArticleRequest;
 use App\Models\Article;
 use App\Models\Image;
 use Illuminate\Database\Eloquent\Collection;
@@ -30,9 +31,18 @@ class ArticleController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(ArticleRequest $request)
     {
-        //
+        $article = new Article([
+            'title' => $request->title,
+            'content' => $request->content
+        ]);
+        
+        //dd('Mensaje ID: '. $image->id . ' -  Nombre: ' . $image->name);
+        $image = ProjectController::storeImage($request->file);
+        $article->cover_id = $image->id;
+        $article->save();
+        return redirect()->route('article.create');
     }
 
     /**

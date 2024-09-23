@@ -48,10 +48,10 @@ class ProjectController extends Controller
         $image = $this->storeImage($request->file);
         $project->cover_id = $image->id;
         $project->save();
-        return redirect()->route('createProject');
+        return redirect()->route('project.create');
     }
 
-    public function storeImage(UploadedFile $file) : Image {
+    public static function storeImage(UploadedFile $file) : Image {
 
         $file_url = time().'.'. $file->extension();
         $file->storeAs('public/images', $file_url);
@@ -89,13 +89,8 @@ class ProjectController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(ProjectRequest $request, string $id)
     {   
-        $request->validate([
-            'title' => 'required|string|min:3',
-            'content' => 'required|min:10',
-            'file' => ['nullable', File::image()->max(10*1024)] 
-        ]);
 
         $project = Project::findOrFail($id);
 
@@ -110,7 +105,7 @@ class ProjectController extends Controller
         $project->content = $request->content;
         $project->save();
 
-        return redirect()->route('adminProjects')->with('success', 'Proyecto actualizado correctamente.');
+        return redirect()->route('admin.projects')->with('success', 'Proyecto actualizado correctamente.');
     }
 
     /**
