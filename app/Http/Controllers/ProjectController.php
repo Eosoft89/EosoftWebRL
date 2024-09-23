@@ -24,7 +24,12 @@ class ProjectController extends Controller
     public function index()
     {
         $projects = Project::with('cover')->get();
-        return Inertia::render('Admin/Project/Index', ['projects' => $this->getProjectsWithCover($projects)]);
+        return Inertia::render('Admin/Project/Index', [
+            'projects' => $this->getProjectsWithCover($projects),
+            'flash' => [
+                'message' => session('message'),
+            ],
+        ]);
     }
     /**
      * Show the form for creating a new resource.
@@ -49,7 +54,7 @@ class ProjectController extends Controller
         $image = $this->storeImage($request->file);
         $project->cover_id = $image->id;
         $project->save();
-        return redirect()->route('admin.projects')->with('success', 'Proyecto registrado correctamente');
+        return redirect()->route('admin.projects')->with('message', 'Proyecto registrado correctamente');
     }
 
     public static function storeImage(UploadedFile $file) : Image {
@@ -106,7 +111,7 @@ class ProjectController extends Controller
         $project->content = $request->content;
         $project->save();
 
-        return Redirect::route('admin.projects')->with('success', 'Proyecto actualizado correctamente.');
+        return Redirect::route('admin.projects')->with('message', 'Actualizado exitosamente');
     }
 
     /**

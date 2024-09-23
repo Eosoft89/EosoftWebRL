@@ -6,40 +6,37 @@ import { Head, Link, usePage } from '@inertiajs/react';
 import { truncateHTML } from '@/utils/functions';
 import { ProjectProps } from '@/types/types';
 
+interface Props extends PageProps<{
+    projects: ProjectProps[]; 
+    flash: {
+        message?: string;
+    };
+}>{}
 
-interface FlashProps {
-    success? : string;
-    error? : string;
-}
+function Index ({auth, projects}: Props) {
 
-interface Props extends PageProps<{projects: ProjectProps[], flash?: FlashProps}>{
-
-}
-
-function Index ({auth, projects, flash}: Props) {
-
+    const { flash } = usePage<Props>().props;
     const [show, setShow] = useState(false);
-
-    if (flash?.success){
-        setShow(true);
-    }
+    const message = flash.message;
 
     return (
         <AdminLayout user={auth.user} header={<h2>Bienvenido {auth.user.name}</h2>}>
             <Head title="Proyectos" />
             <main>
                 <Button onClick={() => setShow(true)}>Toast</Button>
-                {flash?.success && (
+                {message && (
                 <div className="alert alert-success">
-                    {flash.success}
+                    {message}
                 </div>
-            )}
+                
+                )}
+
                 <ToastContainer className='p-3 position-fixed' position='bottom-end' style={{zIndex: 1}}>
                     <Toast onClose={() => setShow(false)} show={show} delay={3000} bg='success' autohide>
                         <Toast.Header>
                             <strong className="me-auto"><i className="bi bi-check-all fs-5"/>Éxito</strong>
                         </Toast.Header>
-                        <Toast.Body className='text-white'>{flash?.success}</Toast.Body>
+                        <Toast.Body className='text-white'>{message}</Toast.Body>
                     </Toast>
                 </ToastContainer>
 
