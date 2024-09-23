@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Redirect;
 use Illuminate\Validation\Rules\File;
 use Inertia\Inertia;
 
@@ -48,7 +49,7 @@ class ProjectController extends Controller
         $image = $this->storeImage($request->file);
         $project->cover_id = $image->id;
         $project->save();
-        return redirect()->route('project.create');
+        return redirect()->route('admin.projects')->with('success', 'Proyecto registrado correctamente');
     }
 
     public static function storeImage(UploadedFile $file) : Image {
@@ -105,7 +106,7 @@ class ProjectController extends Controller
         $project->content = $request->content;
         $project->save();
 
-        return redirect()->route('admin.projects')->with('success', 'Proyecto actualizado correctamente.');
+        return Redirect::route('admin.projects')->with('success', 'Proyecto actualizado correctamente.');
     }
 
     /**

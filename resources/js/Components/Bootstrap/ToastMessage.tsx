@@ -1,5 +1,5 @@
 import React, { ReactNode } from 'react'
-import { Toast, ToastContainer } from 'react-bootstrap'
+import { Toast, ToastContainer, ToastContainerProps } from 'react-bootstrap'
 
 type Props = {
     title: string;
@@ -7,10 +7,13 @@ type Props = {
     showToast: boolean;
     onClose: () => void;
     delay?: number;
-    variant?: 'success' | 'danger' | 'warning'; 
+    variant?: 'success' | 'danger' | 'warning';
+    
+
+     
 }
 
-function ToastMessage({ title, children, showToast, onClose, delay = 2000, variant = 'success'}: Props) {
+function ToastMessage({ title, children, showToast, onClose, delay = 2000, variant = 'success', }: Props) {
     return (
         <ToastContainer className='p-3 position-fixed' position='bottom-end' style={{zIndex: 1}}>
           <Toast onClose={onClose} show={showToast} delay={delay} bg={variant} autohide>

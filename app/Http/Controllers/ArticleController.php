@@ -42,7 +42,7 @@ class ArticleController extends Controller
         $image = ProjectController::storeImage($request->file);
         $article->cover_id = $image->id;
         $article->save();
-        return redirect()->route('article.create');
+        return redirect()->route('admin.articles')->with('message', 'Artículo registrado exitosamente');
     }
 
     /**

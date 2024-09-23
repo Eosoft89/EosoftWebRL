@@ -20,7 +20,7 @@ type Image = {
 }
 interface Props extends PageProps {
     images: Image[];
-    project?: ProjectProps
+    project?: ProjectProps;
 }
 
 function Create({auth, images, project}: Props) {

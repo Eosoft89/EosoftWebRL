@@ -1,22 +1,47 @@
-import React, { JSXElementConstructor } from 'react'
+import React, { JSXElementConstructor, useState } from 'react'
 import AdminLayout from '@/Layouts/AdminLayout';
 import { PageProps } from '@/types';
-import { Button, Image, Table } from 'react-bootstrap';
-import { Head, Link } from '@inertiajs/react';
+import { Button, Image, Table, Toast, ToastContainer } from 'react-bootstrap';
+import { Head, Link, usePage } from '@inertiajs/react';
 import { truncateHTML } from '@/utils/functions';
 import { ProjectProps } from '@/types/types';
 
 
-interface Props extends PageProps<{projects: ProjectProps[]}>{
+interface FlashProps {
+    success? : string;
+    error? : string;
+}
+
+interface Props extends PageProps<{projects: ProjectProps[], flash?: FlashProps}>{
 
 }
 
-function Index ({auth, projects}: Props) {
+function Index ({auth, projects, flash}: Props) {
+
+    const [show, setShow] = useState(false);
+
+    if (flash?.success){
+        setShow(true);
+    }
 
     return (
         <AdminLayout user={auth.user} header={<h2>Bienvenido {auth.user.name}</h2>}>
             <Head title="Proyectos" />
             <main>
+                <Button onClick={() => setShow(true)}>Toast</Button>
+                {flash?.success && (
+                <div className="alert alert-success">
+                    {flash.success}
+                </div>
+            )}
+                <ToastContainer className='p-3 position-fixed' position='bottom-end' style={{zIndex: 1}}>
+                    <Toast onClose={() => setShow(false)} show={show} delay={3000} bg='success' autohide>
+                        <Toast.Header>
+                            <strong className="me-auto"><i className="bi bi-check-all fs-5"/>Éxito</strong>
+                        </Toast.Header>
+                        <Toast.Body className='text-white'>{flash?.success}</Toast.Body>
+                    </Toast>
+                </ToastContainer>
 
                 <h2 className='mt-3 mb-3'>Proyectos</h2>
 

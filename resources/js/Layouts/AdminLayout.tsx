@@ -2,12 +2,11 @@ import Sidebar from '@/Components/Bootstrap/Sidebar';
 import SidebarClaude from '@/Components/Bootstrap/SidebarClaude';
 import { User } from '@/types';
 import React, { PropsWithChildren, ReactNode, useState } from 'react'
-import { Nav, Navbar, Container, Offcanvas, Button, Col, Row } from 'react-bootstrap';
+import { Nav, Navbar, Container, Offcanvas, Button, Col, Row, ToastContainer, Toast } from 'react-bootstrap';
 
-type Props = {}
 
-function AdminLayout({user, header, children}: PropsWithChildren<{user: User, header?: ReactNode }>) {
-    
+function AdminLayout({user, header, children}: PropsWithChildren<{user: User, header?: ReactNode}>) {
+
     return (
 
         <Container fluid>
