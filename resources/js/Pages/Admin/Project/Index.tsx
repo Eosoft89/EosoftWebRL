@@ -1,44 +1,29 @@
-import React, { JSXElementConstructor, useState } from 'react'
+import React, { JSXElementConstructor, MouseEvent, MouseEventHandler, useState } from 'react'
 import AdminLayout from '@/Layouts/AdminLayout';
 import { PageProps } from '@/types';
 import { Button, Image, Table, Toast, ToastContainer } from 'react-bootstrap';
-import { Head, Link, usePage } from '@inertiajs/react';
+import { Head, Link, router, useForm, usePage } from '@inertiajs/react';
 import { truncateHTML } from '@/utils/functions';
-import { ProjectProps } from '@/types/types';
+import { FlashMessage, ProjectProps } from '@/types/types';
+import axios from 'axios';
 
-interface Props extends PageProps<{
-    projects: ProjectProps[]; 
-    flash: {
-        message?: string;
-    };
-}>{}
+interface Props extends PageProps<{ projects: ProjectProps[]; flash: FlashMessage}>{}
 
-function Index ({auth, projects}: Props) {
+function Index ({auth, projects, flash}: Props) {
 
-    const { flash } = usePage<Props>().props;
-    const [show, setShow] = useState(false);
-    const message = flash.message;
+    const {delete: deleteProyect} = useForm();
+
+    const handleDelete = (id: number) => {
+        if(confirm("¿Desea eliminar el proyecto?")) {
+            deleteProyect(route('project.destroy', id));
+        }
+    }
+    
 
     return (
-        <AdminLayout user={auth.user} header={<h2>Bienvenido {auth.user.name}</h2>}>
+        <AdminLayout user={auth.user} flash={flash} header={<h2>Bienvenido {auth.user.name}</h2>}>
             <Head title="Proyectos" />
             <main>
-                <Button onClick={() => setShow(true)}>Toast</Button>
-                {message && (
-                <div className="alert alert-success">
-                    {message}
-                </div>
-                
-                )}
-
-                <ToastContainer className='p-3 position-fixed' position='bottom-end' style={{zIndex: 1}}>
-                    <Toast onClose={() => setShow(false)} show={show} delay={3000} bg='success' autohide>
-                        <Toast.Header>
-                            <strong className="me-auto"><i className="bi bi-check-all fs-5"/>Éxito</strong>
-                        </Toast.Header>
-                        <Toast.Body className='text-white'>{message}</Toast.Body>
-                    </Toast>
-                </ToastContainer>
 
                 <h2 className='mt-3 mb-3'>Proyectos</h2>
 
@@ -63,7 +48,7 @@ function Index ({auth, projects}: Props) {
                                 <td key='title' className='align-middle'>{project.title}</td>
                                 <td key='content' className='align-middle'>{truncateHTML(project.content, 100)}</td>
                                 <td key='edit' align='center' className='align-middle'><Link href={route('project.edit', project.id)} className='btn btn-primary'>Editar</Link></td>
-                                <td key='delete' align='center' className='align-middle'><Link href='#' className='btn btn-danger'>Eliminar</Link></td>
+                                <td key='delete' align='center' className='align-middle'><Button onClick={() => handleDelete(project.id)} className='btn btn-danger'>Eliminar</Button></td>
                             </tr>
                         )}
                     </tbody>

@@ -40,6 +40,7 @@ Route::middleware(['auth', 'verified'])->controller(ProjectController::class)->g
     Route::post('/admin/projects/create', 'store')->name('project.store');
     Route::get('/admin/projects/edit/{id}', 'edit')->name('project.edit');
     Route::post('/admin/projects/edit/{id}', 'update')->name('project.update');
+    Route::delete('/admin/projects/delete/{id}', 'destroy')->name('project.destroy');
 });
 
 Route::middleware(['auth', 'verified'])->controller(ArticleController::class)->group(function(){

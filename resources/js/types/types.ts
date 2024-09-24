@@ -6,3 +6,8 @@ export interface ProjectProps {
 }
 
 export interface ArticleProps extends ProjectProps {}
+
+export interface FlashMessage{
+    success?: string;
+    error?: string;
+}

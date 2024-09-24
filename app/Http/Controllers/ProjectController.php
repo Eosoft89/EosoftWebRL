@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\ProjectRequest;
 use App\Models\Image;
 use App\Models\Project;
+use GrahamCampbell\ResultType\Success;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
 use Illuminate\Http\UploadedFile;
@@ -27,7 +28,7 @@ class ProjectController extends Controller
         return Inertia::render('Admin/Project/Index', [
             'projects' => $this->getProjectsWithCover($projects),
             'flash' => [
-                'message' => session('message'),
+                'success' => session('success'),
             ],
         ]);
     }
@@ -54,7 +55,7 @@ class ProjectController extends Controller
         $image = $this->storeImage($request->file);
         $project->cover_id = $image->id;
         $project->save();
-        return redirect()->route('admin.projects')->with('message', 'Proyecto registrado correctamente');
+        return redirect()->route('admin.projects')->with('success', 'Proyecto registrado correctamente');
     }
 
     public static function storeImage(UploadedFile $file) : Image {
@@ -111,7 +112,7 @@ class ProjectController extends Controller
         $project->content = $request->content;
         $project->save();
 
-        return Redirect::route('admin.projects')->with('message', 'Actualizado exitosamente');
+        return redirect()->route('admin.projects')->with('success', 'Actualizado exitosamente');
     }
 
     /**
@@ -119,7 +120,9 @@ class ProjectController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        $project = Project::findOrFail($id);
+        $project->delete();
+        return redirect()->back()->with('success', 'Proyecto eliminado exitosamente');
     }
 
     private function getProjectsWithCover(Collection $projects){
