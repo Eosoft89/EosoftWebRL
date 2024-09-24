@@ -5,13 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\ProjectRequest;
 use App\Models\Image;
 use App\Models\Project;
-use GrahamCampbell\ResultType\Success;
 use Illuminate\Database\Eloquent\Collection;
-use Illuminate\Http\Request;
-use Illuminate\Http\UploadedFile;
-use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Redirect;
-use Illuminate\Validation\Rules\File;
 use Inertia\Inertia;
 
 use function PHPUnit\Framework\returnSelf;
@@ -29,6 +23,7 @@ class ProjectController extends Controller
             'projects' => $this->getProjectsWithCover($projects),
             'flash' => [
                 'success' => session('success'),
+                'error' => session('error')
             ],
         ]);
     }
@@ -52,23 +47,10 @@ class ProjectController extends Controller
         ]);
         
         //dd('Mensaje ID: '. $image->id . ' -  Nombre: ' . $image->name);
-        $image = $this->storeImage($request->file);
+        $image = ImageController::storeImage($request->file);
         $project->cover_id = $image->id;
         $project->save();
         return redirect()->route('admin.projects')->with('success', 'Proyecto registrado correctamente');
-    }
-
-    public static function storeImage(UploadedFile $file) : Image {
-
-        $file_url = time().'.'. $file->extension();
-        $file->storeAs('public/images', $file_url);
-
-        $image = new Image;
-        $image->name = $file->getClientOriginalName();
-        $image->url = $file_url;
-        $image->save();
-
-        return $image;
     }
 
     /**
@@ -104,7 +86,7 @@ class ProjectController extends Controller
         //Log::info('datos del request', [$request->all()]);
         //Log::info('Has File:', [$request->hasFile('file')]);
         if ($request->hasFile('file')){
-            $image = $this->storeImage($request->file('file'));
+            $image = ImageController::storeImage($request->file('file'));
             $project->cover_id = $image->id;
         }
 

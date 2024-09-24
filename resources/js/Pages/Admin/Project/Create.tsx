@@ -3,9 +3,9 @@ import JoditEditor from 'jodit-react';
 import AdminLayout from '@/Layouts/AdminLayout';
 import { PageProps } from '@/types';
 import { Head, useForm } from '@inertiajs/react';
-import { Accordion, Button, Card, Col, Form, Image, Row } from 'react-bootstrap';
+import { Accordion, Button, Card, Col, Form, Row } from 'react-bootstrap';
 import LoadingButton from '@/Components/Bootstrap/LoadingButton';
-import { ProjectProps } from '@/types/types';
+import { ImageProps, ProjectProps } from '@/types/types';
 import ToastMessage from '@/Components/Bootstrap/ToastMessage';
 
 interface FormProps {
@@ -14,12 +14,8 @@ interface FormProps {
     file: File | null;
 }
 
-type Image = {
-    id: number;
-    url: string;
-}
 interface Props extends PageProps {
-    images: Image[];
+    images: ImageProps[];
     project?: ProjectProps;
 }
 

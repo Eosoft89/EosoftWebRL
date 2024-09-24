@@ -7,7 +7,10 @@ import { truncateHTML } from '@/utils/functions';
 import { FlashMessage, ProjectProps } from '@/types/types';
 import axios from 'axios';
 
-interface Props extends PageProps<{ projects: ProjectProps[]; flash: FlashMessage}>{}
+interface Props extends PageProps {
+    projects: ProjectProps[];
+    flash: FlashMessage;
+}
 
 function Index ({auth, projects, flash}: Props) {
 
@@ -19,7 +22,6 @@ function Index ({auth, projects, flash}: Props) {
         }
     }
     
-
     return (
         <AdminLayout user={auth.user} flash={flash} header={<h2>Bienvenido {auth.user.name}</h2>}>
             <Head title="Proyectos" />

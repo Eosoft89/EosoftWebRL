@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\ArticleController;
+use App\Http\Controllers\ImageController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\WebsiteController;
@@ -49,6 +50,10 @@ Route::middleware(['auth', 'verified'])->controller(ArticleController::class)->g
     Route::post('/admin/articles/create', 'store')->name('article.store');
     Route::get('/admin/articles/edit/{id}', 'edit')->name('article.edit');
     Route::post('/admin/articles/edit/{id}', 'update')->name('article.update');
+});
+
+Route::middleware(['auth', 'verified'])->controller(ImageController::class)->group(function(){
+    Route::get('/admin/images', 'index')->name('admin.images');
 });
 
 Route::middleware('auth')->group(function () {

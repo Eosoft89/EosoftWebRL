@@ -39,7 +39,7 @@ class ArticleController extends Controller
         ]);
         
         //dd('Mensaje ID: '. $image->id . ' -  Nombre: ' . $image->name);
-        $image = ProjectController::storeImage($request->file);
+        $image = ImageController::storeImage($request->file);
         $article->cover_id = $image->id;
         $article->save();
         return redirect()->route('admin.articles')->with('message', 'Artículo registrado exitosamente');

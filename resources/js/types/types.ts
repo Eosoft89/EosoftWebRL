@@ -1,13 +1,19 @@
-export interface ProjectProps {
+export type ProjectProps = {
     id: number;
     title: string;
     content: string;
     cover_url: string | undefined;
 }
 
-export interface ArticleProps extends ProjectProps {}
+export type ArticleProps = ProjectProps;
 
-export interface FlashMessage{
+export type FlashMessage = {
     success?: string;
     error?: string;
+}
+
+export type ImageProps = {
+    id: number;
+    name: string;
+    url: string;
 }
