@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\Image;
 use Illuminate\Http\Request;
 use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
 
 class ImageController extends Controller
@@ -16,8 +18,14 @@ class ImageController extends Controller
     {
         $images = Image::all();
 
-        return Inertia::render('Admin/Image/Index', [
-            'images' => $images,
+        return Inertia::render('Admin/Image/Index', [    
+            'images' => $images->map(function($image){
+                return[
+                    'id' => $image->id,
+                    'name' => $image->name,
+                    'url' => asset('storage/images/' . $image->url)
+                ];
+            }),
             'flash' => [
                 'success' => session('success'),
                 'error' => session('error')
@@ -83,6 +91,26 @@ class ImageController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        if ($this->deleteImage($id)) {
+            return redirect()->back()->with('success', 'Imagen eliminada exitosamente.');
+        }
+        else {
+            return redirect()->back()->with('error', 'Error al intentar eliminar la imagen.');
+        }
+    }
+
+    public function deleteImage(string $id){
+        return DB::transaction(function () use ($id){
+            $image = Image::findOrFail($id);
+            $file_url = asset('storage/images/' . $image->url);
+
+            if (Storage::exists($file_url)){
+                Storage::delete($file_url);
+            }
+
+            $image->delete();
+
+            return true;
+        });
     }
 }

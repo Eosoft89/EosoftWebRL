@@ -54,6 +54,7 @@ Route::middleware(['auth', 'verified'])->controller(ArticleController::class)->g
 
 Route::middleware(['auth', 'verified'])->controller(ImageController::class)->group(function(){
     Route::get('/admin/images', 'index')->name('admin.images');
+    Route::delete('/admin/images/delete/{id}', 'destroy')->name('image.destroy');
 });
 
 Route::middleware('auth')->group(function () {
