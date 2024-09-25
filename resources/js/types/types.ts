@@ -17,3 +17,8 @@ export type ImageProps = {
     name: string;
     url: string;
 }
+
+export type TagProps = {
+    id: number;
+    name: string;
+}

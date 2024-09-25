@@ -4,6 +4,7 @@ use App\Http\Controllers\ArticleController;
 use App\Http\Controllers\ImageController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ProjectController;
+use App\Http\Controllers\TagController;
 use App\Http\Controllers\WebsiteController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
@@ -55,6 +56,11 @@ Route::middleware(['auth', 'verified'])->controller(ArticleController::class)->g
 Route::middleware(['auth', 'verified'])->controller(ImageController::class)->group(function(){
     Route::get('/admin/images', 'index')->name('admin.images');
     Route::delete('/admin/images/delete/{id}', 'destroy')->name('image.destroy');
+});
+
+Route::middleware(['auth', 'verified'])->controller(TagController::class)->group(function(){
+    Route::get('/admin/tags/search', 'search')->name('tags.search');
+    Route::post('/admin/tags', 'store')->name('tags.store');
 });
 
 Route::middleware('auth')->group(function () {
