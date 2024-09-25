@@ -5,13 +5,15 @@ import { PageProps } from '@/types';
 import { Head, useForm } from '@inertiajs/react';
 import { Accordion, Button, Card, Col, Form, Row } from 'react-bootstrap';
 import LoadingButton from '@/Components/Bootstrap/LoadingButton';
-import { ImageProps, ProjectProps } from '@/types/types';
+import { ImageProps, ProjectProps, TagProps } from '@/types/types';
 import ToastMessage from '@/Components/Bootstrap/ToastMessage';
+import TagInput from '@/Components/Bootstrap/TagInput';
 
 interface FormProps {
     title: string;
     content: string;
     file: File | null;
+    tags: TagProps[];
 }
 
 interface Props extends PageProps {
@@ -25,11 +27,13 @@ function Create({auth, images, project}: Props) {
 
     const[showToast, setShowToast] = useState(false);
     const handleHideToast = () => setShowToast(false);
+    const [tagCollection, setTagCollection] = useState<TagProps[]>([]);
 
     const{data, setData, post, processing, errors, reset } = useForm<FormProps>({
         title: project?.title || '',
         content: project?.content || '',
-        file: null
+        file: null,
+        tags: tagCollection.map(tag => tag)
     });
 
     const joditConfig = useMemo(
@@ -45,7 +49,8 @@ function Create({auth, images, project}: Props) {
             setData({
                 title: project.title || '',
                 content: project.content || '',
-                file: null
+                file: null,
+                tags: tagCollection.map(tag => tag)
             });
         }
     }, [project]);
@@ -123,6 +128,7 @@ function Create({auth, images, project}: Props) {
                         />
                         {errors.content && <div className='text-danger'>{errors.content}</div>}
                     </Form.Group>
+                    <TagInput onTagsChange={setTagCollection}/>
                     <LoadingButton type='submit' disabled={processing}>
                         {project ? 'Actualizar' : 'Registrar'}
                     </LoadingButton>   
