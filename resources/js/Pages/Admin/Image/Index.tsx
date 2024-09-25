@@ -19,11 +19,11 @@ interface Props extends PageProps {
 
 function Index({auth, images, flash}: Props) {
 
-    const {delete: deleteProyect} = useForm();
+    const {delete: deleteImage} = useForm();
 
     const handleDelete = (id: number) => {
         if (confirm("¿Desea eliminar la imagen")){
-            deleteProyect(route('image.destroy', id));
+            deleteImage(route('image.destroy', id));
         }
     }
 

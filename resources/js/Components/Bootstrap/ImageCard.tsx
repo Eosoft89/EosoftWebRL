@@ -14,6 +14,12 @@ function ImageCard({ image, canDelete = false, handleDelete }: Props) {
     const[showToast, setShowToast] = useState(false);
     const handleHideToast = () => setShowToast(false);
 
+    const handle = (id: number) => {
+        if (handleDelete){
+            handleDelete(id);
+        }
+    }
+
     const copyToClipboard = async (text: string) => {
         try {
             await navigator.clipboard.writeText(text);
@@ -33,7 +39,7 @@ function ImageCard({ image, canDelete = false, handleDelete }: Props) {
                     </Card.Text>
                     <div className='d-grid gap-2 mt-auto'>
                         <Button variant="primary" size='sm' onClick={() => copyToClipboard(image.url)}>Copiar link</Button>
-                        { canDelete &&  <Button variant="danger" size='sm' onClick={() => handleDelete?(image.id): Function}>Eliminar</Button> }
+                        { canDelete && <Button variant="danger" size='sm' onClick={() => handle(image.id)}>Eliminar</Button> }
                     </div>          
                 </Card.Body>
             </Card>
