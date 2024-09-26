@@ -1,7 +1,8 @@
+import { PageProps } from '@/types';
 import { TagProps } from '@/types/types'
-import { useForm } from '@inertiajs/react';
+import { useForm, usePage } from '@inertiajs/react';
 import axios from 'axios';
-import React, { useEffect, useState } from 'react'
+import React, { FormEventHandler, useEffect, useState } from 'react'
 import { Badge, Button, Form, ListGroup } from 'react-bootstrap';
 import { useDebouncedCallback } from 'use-debounce';
 
@@ -9,11 +10,17 @@ interface TagInputProps{
     onTagsChange: (tags: TagProps[]) => void;
 }
 
-function TagInput({onTagsChange}: TagInputProps) {
+function TagInput({ onTagsChange }: TagInputProps) {
     
     const [input, setInput] = useState('');
     const [suggestions, setSuggestions] = useState<TagProps[]>([]);
     const [selectedTags, setSelectedTags] = useState<TagProps[]>([]);
+    const {props} = usePage();
+    const tag = props.tag as TagProps | undefined;
+
+    const{post, data, setData} = useForm<{name: string}>({
+        name: input || ''
+    });
 
     const debouncedSearch = useDebouncedCallback((query) => {
         if (query.trim()) {
@@ -41,6 +48,7 @@ function TagInput({onTagsChange}: TagInputProps) {
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setInput(e.target.value);
+        setData('name', e.target.value);
     };
 
     const handleTagSelect = (tag: TagProps) => {
@@ -52,24 +60,22 @@ function TagInput({onTagsChange}: TagInputProps) {
         setInput('');
         setSuggestions([]);
     }
-
-    const handleCreateTag = () => {
-        axios.post(route('tags.store'), { name: input}, {
-            headers: {
-                'Content-Type': 'application/json',
-                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || ''
-            }
-        })
-        .then((response) => {
-            const newTag = response.data;
-            handleTagSelect(newTag);
-            setInput('');
-        })
-        .catch((error) => {
-            console.error('Error al crear el tag: ', error);
-        });
-    };
     
+    const handleCreateTag: FormEventHandler = (e) => {
+        e.preventDefault();
+        post(route('tags.store'), {
+            preserveState: true,
+            preserveScroll: true,
+            data: { name: input},
+            onSuccess: () => {
+                if (tag) {
+                    handleTagSelect(tag);
+                    setInput('');   
+                }   
+            }
+        });
+    }
+
     const handleRemoveTag = (tagId: number) => {
         const newTags = selectedTags.filter(tag => tag.id !== tagId);
         setSelectedTags(newTags);
@@ -113,7 +119,7 @@ function TagInput({onTagsChange}: TagInputProps) {
             </ListGroup>
             )}
         {input && !suggestions.some(tag => tag.name.toLowerCase() === input.toLowerCase()) && (
-            <Button variant="success" onClick={handleCreateTag}>
+            <Button variant="success" type='submit' onClick={handleCreateTag}>
             Create "{input}"
             </Button>
         )}

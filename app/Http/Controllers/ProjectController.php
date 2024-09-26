@@ -6,6 +6,7 @@ use App\Http\Requests\ProjectRequest;
 use App\Models\Image;
 use App\Models\Project;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Support\Facades\Log;
 use Inertia\Inertia;
 
 use function PHPUnit\Framework\returnSelf;
@@ -23,8 +24,9 @@ class ProjectController extends Controller
             'projects' => $this->getProjectsWithCover($projects),
             'flash' => [
                 'success' => session('success'),
-                'error' => session('error')
+                'error' => session('error'),
             ],
+            'tag' => session('tag'),
         ]);
     }
     /**

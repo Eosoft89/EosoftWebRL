@@ -128,7 +128,7 @@ function Create({auth, images, project}: Props) {
                         />
                         {errors.content && <div className='text-danger'>{errors.content}</div>}
                     </Form.Group>
-                    <TagInput onTagsChange={setTagCollection}/>
+                    <TagInput onTagsChange={setTagCollection} />
                     <LoadingButton type='submit' disabled={processing}>
                         {project ? 'Actualizar' : 'Registrar'}
                     </LoadingButton>   

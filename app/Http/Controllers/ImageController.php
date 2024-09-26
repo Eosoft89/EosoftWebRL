@@ -102,7 +102,7 @@ class ImageController extends Controller
     public function deleteImage(string $id){
         return DB::transaction(function () use ($id){
             $image = Image::findOrFail($id);
-            $file_url = asset('storage/images/' . $image->url);
+            $file_url = 'public/storage/images/' . $image->url;
 
             if (Storage::exists($file_url)){
                 Storage::delete($file_url);

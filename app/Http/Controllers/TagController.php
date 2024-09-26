@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Http\Requests\TagRequest;
 use App\Models\Tag;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
+use Inertia\Inertia;
 
 class TagController extends Controller
 {
@@ -12,6 +14,7 @@ class TagController extends Controller
     public function search(Request $request)
     {
         $query = $request->get('query');
+        Log::info('Tag search request: ', [$request->all()]);
         $tags = Tag::where('name', 'like', "%{$query}%")->get();
         return response()->json($tags);
     }
@@ -20,8 +23,10 @@ class TagController extends Controller
      */
     public function store(TagRequest $request)
     {
+        Log::info('Create tag request: ', [$request->all()]);
         $tag = Tag::create(['name' => $request->name]);
-        return response()->json($tag);
+        Log::info('Tag devuelto: ', [$tag->name . ' - id: ', $tag->id]);
+        return redirect()->back()->with('tag', $tag);
     }
 
     /**
