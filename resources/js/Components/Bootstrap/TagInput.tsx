@@ -15,12 +15,6 @@ function TagInput({ onTagsChange }: TagInputProps) {
     const [input, setInput] = useState('');
     const [suggestions, setSuggestions] = useState<TagProps[]>([]);
     const [selectedTags, setSelectedTags] = useState<TagProps[]>([]);
-    const {props} = usePage();
-    const tag = props.tag as TagProps | undefined;
-
-    const{post, data, setData} = useForm<{name: string}>({
-        name: input || ''
-    });
 
     const debouncedSearch = useDebouncedCallback((query) => {
         if (query.trim()) {
@@ -46,10 +40,6 @@ function TagInput({ onTagsChange }: TagInputProps) {
         debouncedSearch(input);
     }, [input]);
 
-    const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setInput(e.target.value);
-        setData('name', e.target.value);
-    };
 
     const handleTagSelect = (tag: TagProps) => {
         if (!selectedTags.some(t => t.id == tag.id)) {
@@ -61,20 +51,30 @@ function TagInput({ onTagsChange }: TagInputProps) {
         setSuggestions([]);
     }
     
-    const handleCreateTag: FormEventHandler = (e) => {
+    const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        post(route('tags.store'), {
-            preserveState: true,
-            preserveScroll: true,
-            data: { name: input},
-            onSuccess: () => {
-                if (tag) {
-                    handleTagSelect(tag);
-                    setInput('');   
-                }   
+        try {
+            await axios.post<{tag: TagProps}>(route('tags.store'), { name: input }, {
+                headers: {
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || '',
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json',
+                }
+            }).then((response) => {
+                console.log('RESPUESTA: ', response)
+                handleTagSelect(response.data.tag);
+            }).catch((error) => {
+                console.log('Error al guardar el tag: ', error);
+            });
+
+        } catch (error) {
+            if (axios.isAxiosError(error)) {
+                console.log('Error de axios: ', error);
+            } else {
+                console.log('Error inesperado');
             }
-        });
-    }
+        }
+    };
 
     const handleRemoveTag = (tagId: number) => {
         const newTags = selectedTags.filter(tag => tag.id !== tagId);
@@ -101,7 +101,7 @@ function TagInput({ onTagsChange }: TagInputProps) {
                 <Form.Control
                 type="text"
                 value={input}
-                onChange={handleInputChange}
+                onChange={(e) => setInput(e.target.value)}
                 placeholder="Type to search or create tags"
                 />
             </Form.Group>
@@ -119,7 +119,7 @@ function TagInput({ onTagsChange }: TagInputProps) {
             </ListGroup>
             )}
         {input && !suggestions.some(tag => tag.name.toLowerCase() === input.toLowerCase()) && (
-            <Button variant="success" type='submit' onClick={handleCreateTag}>
+            <Button variant="success" type='submit' onClick={handleSubmit}>
             Create "{input}"
             </Button>
         )}

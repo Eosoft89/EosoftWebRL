@@ -26,7 +26,7 @@ class TagController extends Controller
         Log::info('Create tag request: ', [$request->all()]);
         $tag = Tag::create(['name' => $request->name]);
         Log::info('Tag devuelto: ', [$tag->name . ' - id: ', $tag->id]);
-        return redirect()->back()->with('tag', $tag);
+        return response()->json(data: ['tag' => ['id' => $tag->id, 'name' => $tag->name]]);
     }
 
     /**
