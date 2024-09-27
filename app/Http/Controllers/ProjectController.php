@@ -6,6 +6,7 @@ use App\Http\Requests\ProjectRequest;
 use App\Models\Image;
 use App\Models\Project;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Inertia\Inertia;
 
@@ -40,18 +41,26 @@ class ProjectController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(ProjectRequest $request)
+    public function store(Request $request)
     {
-        
+        Log::info('Project store request: ', [$request->all()]);
+       
         $project = new Project([
             'title' => $request->title,
             'content' => $request->content
         ]);
-        
+
         //dd('Mensaje ID: '. $image->id . ' -  Nombre: ' . $image->name);
         $image = ImageController::storeImage($request->file);
-        $project->cover_id = $image->id;
+        $project->cover()->associate($image->id);
         $project->save();
+
+        if(isset($request['tags'])){
+            foreach($request['tags'] as $tag) {
+                $project->tags()->attach($tag['id']);
+            }      
+        }
+
         return redirect()->route('admin.projects')->with('success', 'Proyecto registrado correctamente');
     }
 
@@ -60,7 +69,7 @@ class ProjectController extends Controller
      */
     public function show(string $id)
     {
-        $project = Project::with('cover')->findOrFail($id);
+        $project = Project::with('cover', 'tags')->findOrFail($id);
 
         return Inertia::render('ProjectDetail', [
             'title' => $project->title,
@@ -74,7 +83,7 @@ class ProjectController extends Controller
      */
     public function edit(string $id)
     {
-        return Inertia::render('Admin/Project/Create', ['images' => Image::getAllWithUrl(), 'project' => Project::with('cover')->findOrFail($id)]);
+        return Inertia::render('Admin/Project/Create', ['images' => Image::getAllWithUrl(), 'project' => Project::with('cover', 'tags')->findOrFail($id)]);
     }
 
     /**

@@ -33,8 +33,13 @@ function Create({auth, images, project}: Props) {
         title: project?.title || '',
         content: project?.content || '',
         file: null,
-        tags: tagCollection.map(tag => tag)
+        tags: [] as TagProps[]
     });
+
+    const handleSetTagCollection = (tags: TagProps[]) => {
+        setTagCollection(tags);
+        setData('tags', tags);
+    }
 
     const joditConfig = useMemo(
         () => ({
@@ -46,14 +51,17 @@ function Create({auth, images, project}: Props) {
 
     useEffect(() => {
         if(project){
+            console.log('Proyecto recibido: ', project);
             setData({
                 title: project.title || '',
                 content: project.content || '',
                 file: null,
-                tags: tagCollection.map(tag => tag)
+                tags: tagCollection
             });
+
         }
     }, [project]);
+
 
     function handleFile(e: ChangeEvent<HTMLInputElement>) : void {
         if (e.currentTarget.files){
@@ -63,19 +71,13 @@ function Create({auth, images, project}: Props) {
 
     const handleSubmit: FormEventHandler = (e) => {
         e.preventDefault();
-        const formData = new FormData();
-        formData.append('title', data.title);
-        formData.append('content', data.content);
-        
-        if (data.file) {
-            formData.append('file', data.file);
-        }
 
+        console.log('TAGS COLLECTION: ', tagCollection);
+        console.log('TAGS FORM: ', data.tags);
+        console.log('FORM DATA: ', data);
         if(project){
             post(route('project.update', project.id), {
-                forceFormData: true,
-                preserveState: true,
-                preserveScroll: true
+                forceFormData: true
             });
         }
         else{
@@ -128,7 +130,7 @@ function Create({auth, images, project}: Props) {
                         />
                         {errors.content && <div className='text-danger'>{errors.content}</div>}
                     </Form.Group>
-                    <TagInput onTagsChange={setTagCollection} />
+                    <TagInput onTagsChange={handleSetTagCollection} />
                     <LoadingButton type='submit' disabled={processing}>
                         {project ? 'Actualizar' : 'Registrar'}
                     </LoadingButton>   
