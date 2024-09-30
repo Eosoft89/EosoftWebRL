@@ -56,9 +56,8 @@ class ProjectController extends Controller
         $project->save();
 
         if(isset($request['tags'])){
-            foreach($request['tags'] as $tag) {
-                $project->tags()->attach($tag['id']);
-            }      
+            $tagIds = collect($request->input('tags'))->pluck('id')->all();
+            $project->tags()->attach($tagIds);
         }
 
         return redirect()->route('admin.projects')->with('success', 'Proyecto registrado correctamente');
@@ -89,7 +88,7 @@ class ProjectController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(ProjectRequest $request, string $id)
+    public function update(Request $request, string $id)
     {   
 
         $project = Project::findOrFail($id);
@@ -105,6 +104,12 @@ class ProjectController extends Controller
         $project->content = $request->content;
         $project->save();
 
+        if ($request->has('tags')) {
+            $tagIds = collect($request->input('tags'))->pluck('id')->all();
+            Log::info('TAG IDS: ', $tagIds);
+            $project->tags()->sync($tagIds);
+        }
+        
         return redirect()->route('admin.projects')->with('success', 'Actualizado exitosamente');
     }
 

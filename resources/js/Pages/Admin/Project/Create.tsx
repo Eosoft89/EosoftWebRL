@@ -27,7 +27,7 @@ function Create({auth, images, project}: Props) {
 
     const[showToast, setShowToast] = useState(false);
     const handleHideToast = () => setShowToast(false);
-    const [tagCollection, setTagCollection] = useState<TagProps[]>([]);
+    //const [tagCollection, setTagCollection] = useState<TagProps[]>([]);
 
     const{data, setData, post, processing, errors, reset } = useForm<FormProps>({
         title: project?.title || '',
@@ -37,7 +37,6 @@ function Create({auth, images, project}: Props) {
     });
 
     const handleSetTagCollection = (tags: TagProps[]) => {
-        setTagCollection(tags);
         setData('tags', tags);
     }
 
@@ -52,13 +51,14 @@ function Create({auth, images, project}: Props) {
     useEffect(() => {
         if(project){
             console.log('Proyecto recibido: ', project);
+           /// setTagCollection(project.tags);
             setData({
                 title: project.title || '',
                 content: project.content || '',
                 file: null,
-                tags: tagCollection
+                tags: project.tags
             });
-
+            console.log('Data tags: ', data.tags);
         }
     }, [project]);
 
@@ -72,7 +72,7 @@ function Create({auth, images, project}: Props) {
     const handleSubmit: FormEventHandler = (e) => {
         e.preventDefault();
 
-        console.log('TAGS COLLECTION: ', tagCollection);
+        //console.log('TAGS COLLECTION: ', tagCollection);
         console.log('TAGS FORM: ', data.tags);
         console.log('FORM DATA: ', data);
         if(project){
@@ -130,7 +130,7 @@ function Create({auth, images, project}: Props) {
                         />
                         {errors.content && <div className='text-danger'>{errors.content}</div>}
                     </Form.Group>
-                    <TagInput onTagsChange={handleSetTagCollection} />
+                    <TagInput onTagsChange={handleSetTagCollection} tagCollection={data.tags} />
                     <LoadingButton type='submit' disabled={processing}>
                         {project ? 'Actualizar' : 'Registrar'}
                     </LoadingButton>   

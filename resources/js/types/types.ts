@@ -3,6 +3,7 @@ export type ProjectProps = {
     title: string;
     content: string;
     cover_url: string | undefined;
+    tags: TagProps[];
 }
 
 export type ArticleProps = ProjectProps;

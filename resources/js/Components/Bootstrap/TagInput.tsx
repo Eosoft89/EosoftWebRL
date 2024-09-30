@@ -8,9 +8,10 @@ import { useDebouncedCallback } from 'use-debounce';
 
 interface TagInputProps{
     onTagsChange: (tags: TagProps[]) => void;
+    tagCollection?: TagProps[]; 
 }
 
-function TagInput({ onTagsChange }: TagInputProps) {
+function TagInput({ onTagsChange, tagCollection }: TagInputProps) {
     
     const [input, setInput] = useState('');
     const [suggestions, setSuggestions] = useState<TagProps[]>([]);
@@ -51,6 +52,13 @@ function TagInput({ onTagsChange }: TagInputProps) {
         setSuggestions([]);
     }
     
+    useEffect(() => {
+        console.log('Tag Collection recibido en TagInput; ', tagCollection);
+        if(tagCollection){
+           setSelectedTags(tagCollection); 
+        }
+    }, [tagCollection]);
+
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         try {
