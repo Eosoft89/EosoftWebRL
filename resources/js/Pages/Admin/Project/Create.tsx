@@ -3,7 +3,7 @@ import JoditEditor from 'jodit-react';
 import AdminLayout from '@/Layouts/AdminLayout';
 import { PageProps } from '@/types';
 import { Head, useForm } from '@inertiajs/react';
-import { Accordion, Button, Card, Col, Form, Row } from 'react-bootstrap';
+import { Accordion, Button, Card, Col, Form, Image, Row } from 'react-bootstrap';
 import LoadingButton from '@/Components/Bootstrap/LoadingButton';
 import { ImageProps, ProjectProps, TagProps } from '@/types/types';
 import ToastMessage from '@/Components/Bootstrap/ToastMessage';
@@ -27,6 +27,7 @@ function Create({auth, images, project}: Props) {
 
     const[showToast, setShowToast] = useState(false);
     const handleHideToast = () => setShowToast(false);
+    const[previewUrl, setPreviewUrl] = useState('');
     //const [tagCollection, setTagCollection] = useState<TagProps[]>([]);
 
     const{data, setData, post, processing, errors, reset } = useForm<FormProps>({
@@ -52,6 +53,7 @@ function Create({auth, images, project}: Props) {
         if(project){
             console.log('Proyecto recibido: ', project);
            /// setTagCollection(project.tags);
+            setPreviewUrl(project.cover_url ? project.cover_url : '');
             setData({
                 title: project.title || '',
                 content: project.content || '',
@@ -68,6 +70,19 @@ function Create({auth, images, project}: Props) {
             setData('file', e.currentTarget.files[0]);
         }
     }
+
+    useEffect(() => {
+        if (data.file) {
+            const objectUrl = URL.createObjectURL(data.file);
+            setPreviewUrl(objectUrl);
+
+            return () => {
+                if (previewUrl) {
+                    URL.revokeObjectURL(previewUrl)
+                }
+            }
+        }
+      }, [data.file]);
 
     const handleSubmit: FormEventHandler = (e) => {
         e.preventDefault();
@@ -104,7 +119,7 @@ function Create({auth, images, project}: Props) {
             <div className="p-4 shadow-md rounded-lg">
                 <Form onSubmit={handleSubmit}>
                     <Form.Group className="mb-3" controlId="TitleInput">
-                        <Form.Label>Título</Form.Label>
+                        <Form.Label><b>1. Título</b></Form.Label>
                         <Form.Control 
                             type="text" 
                             placeholder="Nuevo proyecto"
@@ -114,14 +129,15 @@ function Create({auth, images, project}: Props) {
                         {errors.title && <div className='text-danger'>{errors.title}</div>}
                     </Form.Group>
                     <Form.Group controlId="formFile" className="mb-3">
-                        <Form.Label>Portada</Form.Label>
+                        <Form.Label><b>2. Portada</b></Form.Label>
+                        <Image src={previewUrl} width={150} rounded className='mb-2'/>
                         <Form.Control 
                             type='file'
                             onChange={handleFile}/>
                         {errors.file && <div className="text-danger">{errors.file}</div>}
                     </Form.Group>
                     <Form.Group className="mb-3" controlId="ContentInput">
-                        <Form.Label>Contenido</Form.Label>
+                        <Form.Label><b>3. Contenido</b></Form.Label>
                         <JoditEditor 
                             ref={editor}
                             value={data.content}

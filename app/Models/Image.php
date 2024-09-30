@@ -21,7 +21,8 @@ class Image extends Model
         return $this->hasOne(Project::class, 'cover_id');
     }
 
-    public static function getAllWithUrl(){
+    public static function getAllWithUrl() 
+    {
         $images = Image::all();
         return $images->map(
             function ($image){
@@ -33,5 +34,4 @@ class Image extends Model
             }
         );
     }
-
 }

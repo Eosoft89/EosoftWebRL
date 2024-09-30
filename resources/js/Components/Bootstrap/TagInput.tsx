@@ -92,27 +92,37 @@ function TagInput({ onTagsChange, tagCollection }: TagInputProps) {
 
     return (
         <div>
-            <div className="mb-2">
-                {selectedTags.map(tag => (
-                <Badge 
-                    key={tag.id} 
-                    bg="primary" 
-                    className="me-1 mb-1"
-                    style={{ cursor: 'pointer' }}
-                    onClick={() => handleRemoveTag(tag.id)}
-                >
-                    {tag.name} &times;
-                </Badge>
-                ))}
-            </div>
             <Form.Group className="mb-3">
+                <Form.Label><b>4. Tags</b></Form.Label>
+
+                <div className="mb-2">
+                    {selectedTags.map(tag => (
+                    <Badge 
+                        key={tag.id} 
+                        bg="primary" 
+                        className="me-1 mb-1"
+                        style={{ cursor: 'pointer' }}
+                        onClick={() => handleRemoveTag(tag.id)}
+                    >
+                        {tag.name} &times;
+                    </Badge>
+                    ))}
+                </div>
+            
                 <Form.Control
                 type="text"
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
-                placeholder="Type to search or create tags"
+                placeholder="Escriba para obtener o crear tags"
                 />
             </Form.Group>
+            
+            {input && !suggestions.some(tag => tag.name.toLowerCase() === input.toLowerCase()) && (
+            <Button variant="success" type='submit' onClick={handleSubmit} className='mb-3'>
+            Crear "{input}"
+            </Button>
+            )}
+
             {suggestions.length > 0 && (
             <ListGroup className="mb-3">
                 {suggestions.map(tag => (
@@ -126,11 +136,6 @@ function TagInput({ onTagsChange, tagCollection }: TagInputProps) {
                 ))}
             </ListGroup>
             )}
-        {input && !suggestions.some(tag => tag.name.toLowerCase() === input.toLowerCase()) && (
-            <Button variant="success" type='submit' onClick={handleSubmit}>
-            Create "{input}"
-            </Button>
-        )}
     </div>
     );
 }

@@ -82,7 +82,10 @@ class ProjectController extends Controller
      */
     public function edit(string $id)
     {
-        return Inertia::render('Admin/Project/Create', ['images' => Image::getAllWithUrl(), 'project' => Project::with('cover', 'tags')->findOrFail($id)]);
+        $project = Project::with('cover', 'tags')->findOrFail($id);
+        $project->cover_url = asset('storage/images/' . $project->cover->url);
+
+        return Inertia::render('Admin/Project/Create', ['images' => Image::getAllWithUrl(), 'project' => $project]);
     }
 
     /**
