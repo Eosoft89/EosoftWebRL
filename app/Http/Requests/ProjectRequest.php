@@ -25,8 +25,7 @@ class ProjectRequest extends FormRequest
         $rules = [
             'title' => ['required','string', 'min:3'],
             'content' => ['required', 'min:10'],
-            'tags' => ['array'],
-            'tags.*' => ['exists:tags,id']
+            'tags' => ['array', 'nullable'],
         ];
 
         if ($this->routeIs('project.store')){

@@ -41,7 +41,7 @@ class ProjectController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(ProjectRequest $request)
     {
         Log::info('Project store request: ', [$request->all()]);
        
@@ -88,7 +88,7 @@ class ProjectController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(ProjectRequest $request, string $id)
     {   
 
         $project = Project::findOrFail($id);

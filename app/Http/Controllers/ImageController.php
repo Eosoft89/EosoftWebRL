@@ -6,6 +6,7 @@ use App\Models\Image;
 use Illuminate\Http\Request;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
 
@@ -102,8 +103,8 @@ class ImageController extends Controller
     public function deleteImage(string $id){
         return DB::transaction(function () use ($id){
             $image = Image::findOrFail($id);
-            $file_url = 'public/storage/images/' . $image->url;
-
+            $file_url = 'public/images/' . $image->url;
+            
             if (Storage::exists($file_url)){
                 Storage::delete($file_url);
             }
