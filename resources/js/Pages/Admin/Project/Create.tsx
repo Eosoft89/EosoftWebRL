@@ -28,6 +28,7 @@ function Create({auth, images, project}: Props) {
     const[showToast, setShowToast] = useState(false);
     const handleHideToast = () => setShowToast(false);
     const[previewUrl, setPreviewUrl] = useState('');
+    const[fromFile, setFromFile] = useState(true);
     //const [tagCollection, setTagCollection] = useState<TagProps[]>([]);
 
     const{data, setData, post, processing, errors, reset } = useForm<FormProps>({
@@ -130,6 +131,8 @@ function Create({auth, images, project}: Props) {
                     </Form.Group>
                     <Form.Group controlId="formFile" className="mb-3">
                         <Form.Label><b>2. Portada</b></Form.Label>
+                        <Form.Check type='radio' label='Desde nuevo archivo' checked={fromFile} onClick={() => setFromFile(true)}/>
+                        <Form.Check type='radio' label='Desde el sistema' checked={!fromFile} onClick={() => setFromFile(false)} />
                         <Image src={previewUrl} width={150} rounded className='mb-2'/>
                         <Form.Control 
                             type='file'
