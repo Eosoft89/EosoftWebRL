@@ -78,7 +78,7 @@ function Create({auth, images, project}: Props) {
 
             return () => {
                 if (previewUrl) {
-                    URL.revokeObjectURL(previewUrl)
+                    URL.revokeObjectURL(previewUrl);
                 }
             }
         }

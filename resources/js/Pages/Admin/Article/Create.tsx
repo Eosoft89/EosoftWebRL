@@ -5,21 +5,19 @@ import { PageProps } from '@/types';
 import { Head, useForm } from '@inertiajs/react';
 import { Accordion, Button, Card, Col, Form, Image, Row } from 'react-bootstrap';
 import LoadingButton from '@/Components/Bootstrap/LoadingButton';
-import { ArticleProps } from '@/types/types';
+import { ArticleProps, ImageProps, TagProps } from '@/types/types';
 import ToastMessage from '@/Components/Bootstrap/ToastMessage';
+import TagInput from '@/Components/Bootstrap/TagInput';
 
 interface FormProps {
     title: string;
     content: string;
     file: File | null;
+    tags: TagProps[];
 }
 
-type Image = {
-    id: number;
-    url: string;
-}
 interface Props extends PageProps {
-    images: Image[];
+    images: ImageProps[];
     article?: ArticleProps
 }
 
@@ -29,12 +27,18 @@ function Create({auth, images, article}: Props) {
 
     const[showToast, setShowToast] = useState(false);
     const handleHideToast = () => setShowToast(false);
+    const[previewUrl, setPreviewUrl] = useState('');
 
     const{data, setData, post, processing, errors, reset } = useForm<FormProps>({
         title: article?.title || '',
         content: article?.content || '',
-        file: null
+        file: null,
+        tags: [] as TagProps[]
     });
+
+    const handleSetTagCollection = (tags: TagProps[]) => {
+        setData('tags', tags);
+    }
 
     const joditConfig = useMemo(
         () => ({
@@ -46,10 +50,12 @@ function Create({auth, images, article}: Props) {
 
     useEffect(() => {
         if(article){
+            setPreviewUrl(article.cover_url ? article.cover_url : '');
             setData({
                 title: article.title || '',
                 content: article.content || '',
-                file: null
+                file: null,
+                tags: article.tags
             });
         }
     }, [article]);
@@ -60,21 +66,25 @@ function Create({auth, images, article}: Props) {
         }
     }
 
+    useEffect(() => {
+        if (data.file) {
+            const objectUrl = URL.createObjectURL(data.file);
+            setPreviewUrl(objectUrl);
+
+            return () => {
+                if (previewUrl) {
+                    URL.revokeObjectURL(previewUrl);
+                }
+            }
+        }
+    }, [data.file]);
+
     const handleSubmit: FormEventHandler = (e) => {
         e.preventDefault();
-        const formData = new FormData();
-        formData.append('title', data.title);
-        formData.append('content', data.content);
-        
-        if (data.file) {
-            formData.append('file', data.file);
-        }
 
         if(article){
             post(route('article.update', article.id), {
                 forceFormData: true,
-                preserveState: true,
-                preserveScroll: true
             });
         }
         else{
@@ -101,7 +111,7 @@ function Create({auth, images, article}: Props) {
             <div className="p-4 shadow-md rounded-lg">
                 <Form onSubmit={handleSubmit}>
                     <Form.Group className="mb-3" controlId="TitleInput">
-                        <Form.Label>Título</Form.Label>
+                        <Form.Label><b>1. Título</b></Form.Label>
                         <Form.Control 
                             type="text" 
                             placeholder="Nuevo artículo"
@@ -111,14 +121,15 @@ function Create({auth, images, article}: Props) {
                         {errors.title && <div className='text-danger'>{errors.title}</div>}
                     </Form.Group>
                     <Form.Group controlId="formFile" className="mb-3">
-                        <Form.Label>Portada</Form.Label>
+                        <Form.Label><b>2. Portada</b></Form.Label>
+                        <Image src={previewUrl} width={150} rounded className='mb-2'></Image>
                         <Form.Control 
                             type='file'
                             onChange={handleFile}/>
                         {errors.file && <div className="text-danger">{errors.file}</div>}
                     </Form.Group>
                     <Form.Group className="mb-3" controlId="ContentInput">
-                        <Form.Label>Contenido</Form.Label>
+                        <Form.Label><b>3. Contenido</b></Form.Label>
                         <JoditEditor 
                             ref={editor}
                             value={data.content}
@@ -127,6 +138,7 @@ function Create({auth, images, article}: Props) {
                         />
                         {errors.content && <div className='text-danger'>{errors.content}</div>}
                     </Form.Group>
+                    <TagInput onTagsChange={handleSetTagCollection} tagCollection={data.tags}/>
                     <LoadingButton type='submit' disabled={processing}>
                         {article ? 'Actualizar' : 'Registrar'}
                     </LoadingButton>   
