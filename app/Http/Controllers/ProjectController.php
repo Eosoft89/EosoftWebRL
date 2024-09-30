@@ -27,7 +27,6 @@ class ProjectController extends Controller
                 'success' => session('success'),
                 'error' => session('error'),
             ],
-            'tag' => session('tag'),
         ]);
     }
     /**
@@ -60,7 +59,7 @@ class ProjectController extends Controller
             $project->tags()->attach($tagIds);
         }
 
-        return redirect()->route('admin.projects')->with('success', 'Proyecto registrado correctamente');
+        return redirect()->route('admin.projects')->with('success', 'Proyecto registrado exitosamente');
     }
 
     /**
@@ -83,7 +82,7 @@ class ProjectController extends Controller
     public function edit(string $id)
     {
         $project = Project::with('cover', 'tags')->findOrFail($id);
-        $project->cover_url = asset('storage/images/' . $project->cover->url);
+        $project->cover_url = $project->cover ? asset('storage/images/' . $project->cover->url) : null;
 
         return Inertia::render('Admin/Project/Create', ['images' => Image::getAllWithUrl(), 'project' => $project]);
     }
@@ -100,7 +99,7 @@ class ProjectController extends Controller
         //Log::info('Has File:', [$request->hasFile('file')]);
         if ($request->hasFile('file')){
             $image = ImageController::storeImage($request->file('file'));
-            $project->cover_id = $image->id;
+            $project->cover()->associate($image->id);
         }
 
         $project->title = $request->title;
@@ -113,7 +112,7 @@ class ProjectController extends Controller
             $project->tags()->sync($tagIds);
         }
         
-        return redirect()->route('admin.projects')->with('success', 'Actualizado exitosamente');
+        return redirect()->route('admin.projects')->with('success', 'Proyecto actualizado exitosamente');
     }
 
     /**
@@ -138,5 +137,6 @@ class ProjectController extends Controller
                 ];
             }
         )->toArray();
+        
     }
 }

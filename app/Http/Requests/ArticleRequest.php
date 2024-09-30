@@ -24,7 +24,8 @@ class ArticleRequest extends FormRequest
     {
         $rules = [
             'title' => ['required','string', 'min:3'],
-            'content' => ['required', 'min:10']
+            'content' => ['required', 'min:10'],
+            'tags' => ['array', 'nullable']
         ];
 
         if ($this->routeIs('article.store')){

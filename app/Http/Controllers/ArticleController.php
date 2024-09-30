@@ -17,7 +17,13 @@ class ArticleController extends Controller
     public function index()
     {
         $articles = Article::with('cover')->get();
-        return Inertia::render('Admin/Article/Index', ['articles' => $this->getArticlesWithCover($articles)]);
+        return Inertia::render('Admin/Article/Index', [
+            'articles' => $this->getArticlesWithCover($articles),
+            'flash' => [
+                'success' => session('success'),
+                'error' => session('error')
+            ],
+        ]);
     }
 
     /**
@@ -40,9 +46,15 @@ class ArticleController extends Controller
         
         //dd('Mensaje ID: '. $image->id . ' -  Nombre: ' . $image->name);
         $image = ImageController::storeImage($request->file);
-        $article->cover_id = $image->id;
+        $article->cover()->associate($image->id);
         $article->save();
-        return redirect()->route('admin.articles')->with('message', 'Artículo registrado exitosamente');
+
+        if(isset($request['tags'])) {
+            $tagIds = collect($request->input('tags'))->pluck('id')->all();
+            $article->tags()->attach($tagIds);
+        }
+
+        return redirect()->route('admin.articles')->with('success', 'Artículo registrado exitosamente');
     }
 
     /**
@@ -50,7 +62,10 @@ class ArticleController extends Controller
      */
     public function show(string $id)
     {
-        //
+        $article = Article::with('cover', 'tags')->findOrFail($id);
+        $article->cover_url = asset('storage/images/' . $article->cover->id);
+
+        return Inertia::render('ArticleDetail', [$article]);
     }
 
     /**
@@ -58,15 +73,34 @@ class ArticleController extends Controller
      */
     public function edit(string $id)
     {
-        //
+        $article = Article::with('cover', 'tags')->findOrFail($id);
+        $article->cover_url = $article->cover ? asset('storage/images/' . $article->cover->url) : null;
+        
+        return Inertia::render('Admin/Article/Create', ['images' => Image::getAllWithUrl(), 'article' => $article]);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(ArticleRequest $request, string $id)
     {
-        //
+        $article = Article::findOrFail($id);
+
+        if ($request->hasFile('file')){
+            $image = ImageController::storeImage($request->file('file'));
+            $article->cover()->associate($image->id);
+        }
+
+        $article->title = $request->title;
+        $article->content = $request->content;
+        $article->save();
+
+        if ($request->has('tags')) {
+            $tagIds = collect($request->input('tags'))->pluck('id')->all();
+            $article->tags()->sync($tagIds);
+        }
+
+        return redirect()->route('admin.articles')->with('success', 'Artículo actualizado correctamente');
     }
 
     /**
@@ -74,7 +108,9 @@ class ArticleController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        $article = Article::findOrFail($id);
+        $article->delete();
+        return redirect()->back()->with('success', 'Artículo eliminado exitosamente');
     }
 
     private function getArticlesWithCover(Collection $articles){
@@ -89,5 +125,6 @@ class ArticleController extends Controller
                 ];
             }
         )->toArray();
+        
     }
 }
