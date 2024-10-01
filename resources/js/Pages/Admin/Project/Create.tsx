@@ -3,7 +3,7 @@ import JoditEditor from 'jodit-react';
 import AdminLayout from '@/Layouts/AdminLayout';
 import { PageProps } from '@/types';
 import { Head, useForm } from '@inertiajs/react';
-import { Accordion, Button, Card, Col, Form, Image, Row } from 'react-bootstrap';
+import { Accordion, Button, Card, Col, Form, FormControl, Image, Row } from 'react-bootstrap';
 import LoadingButton from '@/Components/Bootstrap/LoadingButton';
 import { ImageProps, ProjectProps, TagProps } from '@/types/types';
 import ToastMessage from '@/Components/Bootstrap/ToastMessage';
@@ -134,10 +134,11 @@ function Create({auth, images, project}: Props) {
                         <Form.Check type='radio' label='Desde nuevo archivo' checked={fromFile} onClick={() => setFromFile(true)}/>
                         <Form.Check type='radio' label='Desde el sistema' checked={!fromFile} onClick={() => setFromFile(false)} />
                         <Image src={previewUrl} width={150} rounded className='mb-2'/>
-                        <Form.Control 
+                        {fromFile && <Form.Control 
                             type='file'
-                            onChange={handleFile}/>
+                            onChange={handleFile}/>}
                         {errors.file && <div className="text-danger">{errors.file}</div>}
+                        {!fromFile && <FormControl type='text' placeholder='URL'/>}
                     </Form.Group>
                     <Form.Group className="mb-3" controlId="ContentInput">
                         <Form.Label><b>3. Contenido</b></Form.Label>
