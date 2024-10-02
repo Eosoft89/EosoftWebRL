@@ -1,6 +1,6 @@
 import AdminLayout from '@/Layouts/AdminLayout';
 import { PageProps } from '@/types';
-import { Badge, Image, Table } from 'react-bootstrap';
+import { Badge, Button, Image, Table } from 'react-bootstrap';
 import { Head, Link, useForm } from '@inertiajs/react';
 import { truncateHTML } from '@/utils/functions';
 import { ArticleProps, FlashMessage } from '@/types/types';
@@ -22,7 +22,7 @@ function Index ({auth, articles, flash}: Props) {
     }
 
     return (
-        <AdminLayout user={auth.user} header={<h2>Bienvenido {auth.user.name}</h2>}>
+        <AdminLayout user={auth.user} flash={flash} header={<h2>Bienvenido {auth.user.name}</h2>}>
             <Head title="Artículos" />
             <main>
 
@@ -58,7 +58,7 @@ function Index ({auth, articles, flash}: Props) {
                                         </Badge>)}
                                     </td>
                                     <td key='edit' align='center' className='align-middle'><Link href={route('article.edit', article.id)} className='btn btn-primary'>Editar</Link></td>
-                                    <td key='delete' width='10%' align='center' className='align-middle'><Link href='#' className='btn btn-danger'>Eliminar</Link></td>
+                                    <td key='delete' width='10%' align='center' className='align-middle'><Button onClick={() => handleDelete(article.id)} className='btn btn-danger'>Eliminar</Button></td>
                                 </tr>
                             )}
                         </tbody>

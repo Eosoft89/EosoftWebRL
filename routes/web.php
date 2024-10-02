@@ -51,6 +51,7 @@ Route::middleware(['auth', 'verified'])->controller(ArticleController::class)->g
     Route::post('/admin/articles/create', 'store')->name('article.store');
     Route::get('/admin/articles/edit/{id}', 'edit')->name('article.edit');
     Route::post('/admin/articles/edit/{id}', 'update')->name('article.update');
+    Route::delete('/admin/articles/delete/{id}', 'destroy')->name('article.destroy');
 });
 
 Route::middleware(['auth', 'verified'])->controller(ImageController::class)->group(function(){
