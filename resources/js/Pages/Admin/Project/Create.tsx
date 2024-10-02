@@ -15,7 +15,7 @@ interface FormProps {
     content: string;
     file: File | null;
     tags: TagProps[];
-    imageId: number | null
+    imageId: number | null;
 }
 
 interface Props extends PageProps {
@@ -27,10 +27,10 @@ function Create({auth, images, project}: Props) {
 
     const editor = useRef(null);
 
-    const[showToast, setShowToast] = useState(false);
+    const [showToast, setShowToast] = useState(false);
     const handleHideToast = () => setShowToast(false);
-    const[previewUrl, setPreviewUrl] = useState('');
-    const[fromFile, setFromFile] = useState(true);
+    const [previewUrl, setPreviewUrl] = useState('');
+    const [fromFile, setFromFile] = useState(true);
     //const [tagCollection, setTagCollection] = useState<TagProps[]>([]);
 
     const{data, setData, post, processing, errors, reset } = useForm<FormProps>({
@@ -54,17 +54,18 @@ function Create({auth, images, project}: Props) {
         
         if(state != fromFile){
             setFromFile(state);
-            setPreviewUrl('');     
+            setPreviewUrl(project?.cover_url ? project.cover_url : '');     
             state ? setData('imageId', null) : setData('file', null);
         }
 
-        console.log('FORM DATA (From File): ', data);
+        //console.log('FORM DATA (From File): ', data);
     }
 
     const joditConfig = useMemo(
         () => ({
             readonly: false,
-            placeholder: project ? '' : 'Contenido...' 
+            placeholder: project ? '' : 'Contenido...',
+            height: 400, 
         }),
         []
     );
@@ -81,7 +82,7 @@ function Create({auth, images, project}: Props) {
                 tags: project.tags,
                 imageId: null
             });
-            console.log('Data tags: ', data.tags);
+            //console.log('Data tags: ', data.tags);
         }
     }, [project]);
 
@@ -109,8 +110,8 @@ function Create({auth, images, project}: Props) {
         e.preventDefault();
 
         //console.log('TAGS COLLECTION: ', tagCollection);
-        console.log('TAGS FORM: ', data.tags);
-        console.log('FORM DATA: ', data);
+        //console.log('TAGS FORM: ', data.tags);
+        //console.log('FORM DATA: ', data);
         if(project){
             post(route('project.update', project.id), {
                 forceFormData: true

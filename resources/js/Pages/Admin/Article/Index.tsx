@@ -1,16 +1,25 @@
 import AdminLayout from '@/Layouts/AdminLayout';
 import { PageProps } from '@/types';
-import { Image, Table } from 'react-bootstrap';
-import { Head, Link } from '@inertiajs/react';
+import { Badge, Image, Table } from 'react-bootstrap';
+import { Head, Link, useForm } from '@inertiajs/react';
 import { truncateHTML } from '@/utils/functions';
-import { ArticleProps } from '@/types/types';
+import { ArticleProps, FlashMessage } from '@/types/types';
 
 
-interface Props extends PageProps<{articles: ArticleProps[]}>{
-
+interface Props extends PageProps{
+    articles: ArticleProps[];
+    flash: FlashMessage;
 }
 
-function Index ({auth, articles}: Props) {
+function Index ({auth, articles, flash}: Props) {
+
+    const {delete: deleteArticle} = useForm();
+
+    const handleDelete = (id: number) => {
+        if(confirm("¿Desea eliminar el artículo")) {
+            deleteArticle(route('article.destroy', id));
+        }
+    }
 
     return (
         <AdminLayout user={auth.user} header={<h2>Bienvenido {auth.user.name}</h2>}>
@@ -31,6 +40,7 @@ function Index ({auth, articles}: Props) {
                                 <th>Portada</th>
                                 <th>Título</th>
                                 <th>Contenido</th>
+                                <th>Tags</th>
                                 <th>Editar</th>
                                 <th>Eliminar</th>
                             </tr>
@@ -42,8 +52,13 @@ function Index ({auth, articles}: Props) {
                                     <td key='cover' align='center' className='align-middle'><Image src={article.cover_url} width={80} /></td>
                                     <td key='title' className='align-middle'>{article.title}</td>
                                     <td key='content' className='align-middle'>{truncateHTML(article.content, 100)}</td>
+                                    <td key='tags' width="10%" align='center' className='align-middle'>{article.tags.map((tag) => 
+                                        <Badge key={tag.id} bg="primary" className="me-1 mb-1">
+                                            {tag.name}
+                                        </Badge>)}
+                                    </td>
                                     <td key='edit' align='center' className='align-middle'><Link href={route('article.edit', article.id)} className='btn btn-primary'>Editar</Link></td>
-                                    <td key='delete' align='center' className='align-middle'><Link href='#' className='btn btn-danger'>Eliminar</Link></td>
+                                    <td key='delete' width='10%' align='center' className='align-middle'><Link href='#' className='btn btn-danger'>Eliminar</Link></td>
                                 </tr>
                             )}
                         </tbody>

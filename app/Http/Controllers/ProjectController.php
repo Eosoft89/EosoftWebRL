@@ -20,7 +20,7 @@ class ProjectController extends Controller
 
     public function index()
     {
-        $projects = Project::with('cover')->get();
+        $projects = Project::with('cover', 'tags')->get();
         return Inertia::render('Admin/Project/Index', [
             'projects' => $this->getProjectsWithCover($projects),
             'flash' => [
@@ -42,7 +42,7 @@ class ProjectController extends Controller
      */
     public function store(ProjectRequest $request)
     {
-        Log::info('Project store request: ', [$request->all()]);
+        //Log::info('Project store request: ', [$request->all()]);
        
         $project = new Project([
             'title' => $request->title,
@@ -50,8 +50,17 @@ class ProjectController extends Controller
         ]);
 
         //dd('Mensaje ID: '. $image->id . ' -  Nombre: ' . $image->name);
-        $image = ImageController::storeImage($request->file);
-        $project->cover()->associate($image->id);
+        
+        if($request->hasFile('file')){
+            $image = ImageController::storeImage($request->file);
+            $project->cover()->associate($image->id);
+        }
+        else{
+            if(isset($request['imageId'])){
+                $project->cover()->associate($request->imageId);
+            }
+        }
+        
         $project->save();
 
         if(isset($request['tags'])){
@@ -101,6 +110,11 @@ class ProjectController extends Controller
             $image = ImageController::storeImage($request->file('file'));
             $project->cover()->associate($image->id);
         }
+        else{
+            if($request['imageId'] != null && $project->cover?->id != $request->imageId){
+                $project->cover()->associate($request->imageId);
+            }
+        }
 
         $project->title = $request->title;
         $project->content = $request->content;
@@ -108,7 +122,7 @@ class ProjectController extends Controller
 
         if ($request->has('tags')) {
             $tagIds = collect($request->input('tags'))->pluck('id')->all();
-            Log::info('TAG IDS: ', $tagIds);
+            //Log::info('TAG IDS: ', $tagIds);
             $project->tags()->sync($tagIds);
         }
         
@@ -133,7 +147,8 @@ class ProjectController extends Controller
                     'id' => $project->id,
                     'title' => $project->title,
                     'content' => $project->content,
-                    'cover_url' => $project->cover ? asset('storage/images/' . $project->cover->url) : null     
+                    'cover_url' => $project->cover ? asset('storage/images/' . $project->cover->url) : null,
+                    'tags' => $project->tags     
                 ];
             }
         )->toArray();

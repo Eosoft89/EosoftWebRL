@@ -1,7 +1,7 @@
 import React, { JSXElementConstructor, MouseEvent, MouseEventHandler, useState } from 'react'
 import AdminLayout from '@/Layouts/AdminLayout';
 import { PageProps } from '@/types';
-import { Button, Image, Table, Toast, ToastContainer } from 'react-bootstrap';
+import { Badge, Button, Image, Table, Toast, ToastContainer } from 'react-bootstrap';
 import { Head, Link, router, useForm, usePage } from '@inertiajs/react';
 import { truncateHTML } from '@/utils/functions';
 import { FlashMessage, ProjectProps } from '@/types/types';
@@ -31,6 +31,7 @@ function Index ({auth, projects, flash}: Props) {
 
                 <Link href={route('project.create')} className='btn btn-primary m-2'>Crear nuevo</Link>
 
+                {projects.length == 0 ? <p>Sin registros</p> :  
                 <Table striped bordered hover>
                     <thead>
                         <tr>
@@ -38,6 +39,7 @@ function Index ({auth, projects, flash}: Props) {
                             <th>Portada</th>
                             <th>Título</th>
                             <th>Contenido</th>
+                            <th>Tags</th>
                             <th>Editar</th>
                             <th>Eliminar</th>
                         </tr>
@@ -49,12 +51,18 @@ function Index ({auth, projects, flash}: Props) {
                                 <td key='cover' align='center' className='align-middle'><Image src={project.cover_url} width={80} /></td>
                                 <td key='title' className='align-middle'>{project.title}</td>
                                 <td key='content' className='align-middle'>{truncateHTML(project.content, 100)}</td>
+                                <td key='tags' width="10%" align='center' className='align-middle'>{project.tags.map((tag) => 
+                                    <Badge key={tag.id} bg="primary" className="me-1 mb-1">
+                                        {tag.name}
+                                    </Badge>)}
+                                </td>
                                 <td key='edit' align='center' className='align-middle'><Link href={route('project.edit', project.id)} className='btn btn-primary'>Editar</Link></td>
-                                <td key='delete' align='center' className='align-middle'><Button onClick={() => handleDelete(project.id)} className='btn btn-danger'>Eliminar</Button></td>
+                                <td key='delete' width='10%' align='center' className='align-middle'><Button onClick={() => handleDelete(project.id)} className='btn btn-danger'>Eliminar</Button></td>
                             </tr>
                         )}
                     </tbody>
                 </Table>
+                }
             </main>
         </AdminLayout>
     );

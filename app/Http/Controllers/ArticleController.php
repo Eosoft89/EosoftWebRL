@@ -16,7 +16,7 @@ class ArticleController extends Controller
      */
     public function index()
     {
-        $articles = Article::with('cover')->get();
+        $articles = Article::with('cover', 'tags')->get();
         return Inertia::render('Admin/Article/Index', [
             'articles' => $this->getArticlesWithCover($articles),
             'flash' => [
@@ -45,8 +45,17 @@ class ArticleController extends Controller
         ]);
         
         //dd('Mensaje ID: '. $image->id . ' -  Nombre: ' . $image->name);
-        $image = ImageController::storeImage($request->file);
-        $article->cover()->associate($image->id);
+
+        if($request->hasFile('file')){
+            $image = ImageController::storeImage($request->file);
+            $article->cover()->associate($image->id);
+        }
+        else{
+            if(isset($request['imageId'])){
+                $article->cover()->associate($request->imageId);
+            }
+        }
+
         $article->save();
 
         if(isset($request['tags'])) {
@@ -90,7 +99,11 @@ class ArticleController extends Controller
             $image = ImageController::storeImage($request->file('file'));
             $article->cover()->associate($image->id);
         }
-
+        else{
+            if($request['imageId'] != null && $article->cover?->id != $request->imageId){
+                $article->cover()->associate($request->imageId);
+            } 
+        }
         $article->title = $request->title;
         $article->content = $request->content;
         $article->save();
@@ -121,7 +134,8 @@ class ArticleController extends Controller
                     'id' => $article->id,
                     'title' => $article->title,
                     'content' => $article->content,
-                    'cover_url' => $article->cover ? asset('storage/images/' . $article->cover->url) : null     
+                    'cover_url' => $article->cover ? asset('storage/images/' . $article->cover->url) : null,
+                    'tags' => $article->tags     
                 ];
             }
         )->toArray();

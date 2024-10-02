@@ -29,7 +29,7 @@ class ProjectRequest extends FormRequest
         ];
 
         if ($this->routeIs('project.store')){
-            $rules['file'] = ['required', File::image()->max(10*1024)];
+            $rules['file'] = ['nullable', File::image()->max(10*1024)];
         }
         else if ($this->routeIs('project.update')){
             $rules['file'] = ['nullable', File::image()->max(10*1024)];
