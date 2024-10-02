@@ -8,12 +8,14 @@ import LoadingButton from '@/Components/Bootstrap/LoadingButton';
 import { ImageProps, ProjectProps, TagProps } from '@/types/types';
 import ToastMessage from '@/Components/Bootstrap/ToastMessage';
 import TagInput from '@/Components/Bootstrap/TagInput';
+import ModalImageContainer from '@/Components/Bootstrap/ModalImageContainer';
 
 interface FormProps {
     title: string;
     content: string;
     file: File | null;
     tags: TagProps[];
+    imageId: number | null
 }
 
 interface Props extends PageProps {
@@ -35,11 +37,28 @@ function Create({auth, images, project}: Props) {
         title: project?.title || '',
         content: project?.content || '',
         file: null,
-        tags: [] as TagProps[]
+        tags: [] as TagProps[],
+        imageId: null 
     });
 
     const handleSetTagCollection = (tags: TagProps[]) => {
         setData('tags', tags);
+    }
+
+    const handleSelectImage = (image: ImageProps) => {
+        setData('imageId', image.id);
+        setPreviewUrl(image.url);
+    }
+
+    const handleSetFromFile = (state : boolean) => {
+        
+        if(state != fromFile){
+            setFromFile(state);
+            setPreviewUrl('');     
+            state ? setData('imageId', null) : setData('file', null);
+        }
+
+        console.log('FORM DATA (From File): ', data);
     }
 
     const joditConfig = useMemo(
@@ -59,7 +78,8 @@ function Create({auth, images, project}: Props) {
                 title: project.title || '',
                 content: project.content || '',
                 file: null,
-                tags: project.tags
+                tags: project.tags,
+                imageId: null
             });
             console.log('Data tags: ', data.tags);
         }
@@ -131,14 +151,14 @@ function Create({auth, images, project}: Props) {
                     </Form.Group>
                     <Form.Group controlId="formFile" className="mb-3">
                         <Form.Label><b>2. Portada</b></Form.Label>
-                        <Form.Check type='radio' label='Desde nuevo archivo' checked={fromFile} onClick={() => setFromFile(true)}/>
-                        <Form.Check type='radio' label='Desde el sistema' checked={!fromFile} onClick={() => setFromFile(false)} />
+                        <Form.Check type='radio' label='Desde nuevo archivo' checked={fromFile} readOnly onClick={() => handleSetFromFile(true)}/>
+                        <Form.Check type='radio' label='Desde el sistema' checked={!fromFile} readOnly onClick={() => handleSetFromFile(false)} />
                         <Image src={previewUrl} width={150} rounded className='mb-2'/>
                         {fromFile && <Form.Control 
                             type='file'
                             onChange={handleFile}/>}
                         {errors.file && <div className="text-danger">{errors.file}</div>}
-                        {!fromFile && <FormControl type='text' placeholder='URL'/>}
+                        {!fromFile && <ModalImageContainer images={images} handleSelectImage={handleSelectImage}/>}
                     </Form.Group>
                     <Form.Group className="mb-3" controlId="ContentInput">
                         <Form.Label><b>3. Contenido</b></Form.Label>
