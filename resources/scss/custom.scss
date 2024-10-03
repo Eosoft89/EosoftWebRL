@@ -1,0 +1,11 @@
+// custom.scss
+
+// Importa las variables de Bootstrap
+
+// Sobrescribe las variables de Bootstrap aquí
+$primary: #2f0fe7;
+
+// Importa Bootstrap después de definir las variables personalizadas
+@import "node_modules/bootstrap/scss/bootstrap";
+@import "../css/app.css";
+@import "bootstrap-icons/font/bootstrap-icons.css";
