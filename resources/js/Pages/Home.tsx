@@ -45,7 +45,7 @@ function Home({}: Props) {
              <Container className="d-flex align-items-center full-min-height">
                 <div>
                     <p className='fs-2 fw-bold'>Un poco de mi historia...</p>
-                    <p className='fs-5'>Nací en un pequeño pueblo de la Comuna de Colbún, llamado Paso Rari. Desde pequeño siempre tuve una mente muy curiosa, interesándome por muchos temas distintos, la gran mayoría relacionados a las Ciencias.</p>
+                    <p className='fs-5'>Nací en un pequeño pueblo de la Comuna de Colbún, llamado Paso Rari. Desde pequeño siempre tuve una mente muy curiosa, interesándome por muchos temas distintos, la gran mayoría relacionados a las Ciencias...</p>
                 </div>
              </Container>
 
