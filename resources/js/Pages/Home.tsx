@@ -1,3 +1,4 @@
+import FadeContainer from '@/Components/Bootstrap/FadeContainer';
 import MainLayout from '@/Layouts/MainLayout';
 import { Head } from '@inertiajs/react';
 import React from 'react';
@@ -13,19 +14,31 @@ function Home({}: Props) {
 
              <Container className="d-flex flex-column align-items-center justify-content-center full-min-height">
                 <div className='text-center'>
-                    <p className='fs-1 fw-bolder mb-1'>Hola! Soy Eric Rojas</p>
-                    <p className='fs-3'>Un ingeniero en informática orientado a resultados, con fascinación por la tecnología y motivación por resolver problemas y adquirir nuevos conocimientos.</p>
+                    <FadeContainer timeToAppear={200}>
+                        <p className='fs-1 fw-bolder mb-1'>Hola! Soy Eric Rojas</p>
+                    </FadeContainer>
                     
-                    <div className='mt-5'>
-                        <Badge className='fs-5 me-1 mb-1 mt-2'>C#</Badge>
-                        <Badge className='fs-5 me-1'>.NET</Badge>
-                        <Badge className='fs-5 me-1'>PHP</Badge>
-                        <Badge className='fs-5 me-1'>Laravel</Badge>
-                        <Badge className='fs-5 me-1'>React</Badge>
-                        <Badge className='fs-5 me-1'>Bootstrap</Badge>
-                        <Badge className='fs-5 me-1'>SQL</Badge>
+                    <FadeContainer timeToAppear={600}>
+                        <p className='fs-3'>Un ingeniero en informática orientado a resultados, con fascinación 
+                        por la tecnología y motivación por resolver problemas y adquirir nuevos conocimientos.</p>
+                    </FadeContainer>
+                    
+                    <FadeContainer timeToAppear={1200}>
+                        <div className='mt-5'>
+                            <Badge className='fs-5 me-1 mb-1 mt-2'>C#</Badge>
+                            <Badge className='fs-5 me-1'>.NET</Badge>
+                            <Badge className='fs-5 me-1'>PHP</Badge>
+                            <Badge className='fs-5 me-1'>Laravel</Badge>
+                            <Badge className='fs-5 me-1'>React</Badge>
+                            <Badge className='fs-5 me-1'>Bootstrap</Badge>
+                            <Badge className='fs-5 me-1'>SQL</Badge>        
+                        </div>
+                    </FadeContainer>
+                    
+                    <FadeContainer timeToAppear={2000} timeout={2000}>
                         <Badge className='fs-5 me-1'>Y mucho más...</Badge>
-                    </div>
+                    </FadeContainer>
+
                 </div>
              </Container>
         
