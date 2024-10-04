@@ -19,16 +19,16 @@ jobs:
         php-version: '8.2.6'
 
       # Sole ejecutar primera vez
-    #- name: Install dependencies
-    #  run: composer install --no-dev --prefer-dist --no-scripts --no-progress --no-suggest
+    - name: Install dependencies
+      run: composer install --no-dev --prefer-dist --no-scripts --no-progress --no-suggest
 
-    #- name: Configure env
-     # env:
-    #    FTP_HOST: ${{ secrets.FTP_HOST }}
-    #    FTP_USERNAME: ${{ secrets.FTP_USERNAME }}
-     #   FTP_PASSWORD: ${{ secrets.FTP_PASSWORD }}
-    #    FTP_DESTINATION: ${{ secrets.FTP_DESTINATION }}
-     # run: php artisan config:cache
+    - name: Configure env
+      env:
+        FTP_HOST: ${{ secrets.FTP_HOST }}
+        FTP_USERNAME: ${{ secrets.FTP_USERNAME }}
+        FTP_PASSWORD: ${{ secrets.FTP_PASSWORD }}
+        FTP_DESTINATION: ${{ secrets.FTP_DESTINATION }}
+      run: php artisan config:cache
         
     #hasta aquí
 
@@ -41,5 +41,9 @@ jobs:
         server-dir: ${{ secrets.FTP_DESTINATION }}
 
     #Para correr varios comandos usar run: | comando1 comando2 comando3...
+
+    - name: Install composer
+      run: composer install  
+
     - name: Migrate database
       run: php artisan migrate
