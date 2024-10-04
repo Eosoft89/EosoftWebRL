@@ -28,7 +28,7 @@ jobs:
         FTP_USERNAME: ${{ secrets.FTP_USERNAME }}
         FTP_PASSWORD: ${{ secrets.FTP_PASSWORD }}
         FTP_DESTINATION: ${{ secrets.FTP_DESTINATION }}
-      run: 
+      run: |
         php artisan config:cache
         php artisan migrate
     #hasta aquí
