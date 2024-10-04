@@ -30,7 +30,7 @@ jobs:
         FTP_DESTINATION: ${{ secrets.FTP_DESTINATION }}
       run: |
         php artisan config:cache
-        php artisan migrate
+        
     #hasta aquí
 
     - name: Deploy to shared hosting
