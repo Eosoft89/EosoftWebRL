@@ -42,8 +42,8 @@ jobs:
 
     #Para correr varios comandos usar run: | comando1 comando2 comando3...
 
-    #- name: Install composer
-    #  run: composer install  
+    - name: Install composer
+      run: composer install  
 
     - name: Migrate database
       run: php artisan migrate --force
