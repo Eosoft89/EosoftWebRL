@@ -1,4 +1,4 @@
-name: Sharedhosting deploy
+name: Laravel with React-Inertia deploy
 
 on:
   push:
@@ -6,50 +6,82 @@ on:
       - main
 
 jobs:
-  deploy:
+  web-deploy:
+    name: Deploy
     runs-on: ubuntu-latest
-
-    steps:
-    - name: Checkout repository
-      uses: actions/checkout@v2
-
-    - name: Configurar entorno PHP
-      uses: shivammathur/setup-php@v2
-      with:
-        php-version: '8.2.6'
-
-      # Sole ejecutar primera vez
-    - name: Install dependencies
-      run: composer install --no-dev --prefer-dist --no-scripts --no-progress --no-suggest
-
-    - name: Configure env
-      env:
+    env:
         FTP_HOST: ${{ secrets.FTP_HOST }}
         FTP_USERNAME: ${{ secrets.FTP_USERNAME }}
         FTP_PASSWORD: ${{ secrets.FTP_PASSWORD }}
         FTP_DESTINATION: ${{ secrets.FTP_DESTINATION }}
-        DB_CONNECTION: 'mysql'
+        DB_CONNECTION: mysql
         DB_HOST: ${{ secrets.DB_HOST }}
+        DB_PORT: 3306
         DB_DATABASE: ${{ secrets.DB_DATABASE }}
         DB_USERNAME: ${{ secrets.DB_USERNAME }}
         DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
 
-      run: php artisan config:cache
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Setup PHP
+      uses: shivammathur/setup-php@v2
+      with:
+        php-version: '8.3'
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '20'
+
+      # Sole ejecutar primera vez
+    - name: Install Composer dependencies
+      run: composer install --no-dev --prefer-dist --no-scripts --no-progress --no-suggest
+
+    - name: Install NPM  dependencies
+      run: npm ci
+    
+    - name: Build Frontend Assets
+      run: npm run build
+
+    - name: Set Directory Permissions
+      run: chmod -R 755 storage bootstrap/cache
         
     #hasta aquí
 
     - name: Deploy to shared hosting
-      uses: SamKirkland/FTP-Deploy-Action@v4.3.4
+      uses: SamKirkland/FTP-Deploy-Action@v4.3.5
       with:
         server: ${{ secrets.FTP_HOST }}
         username: ${{ secrets.FTP_USERNAME }}
         password: ${{ secrets.FTP_PASSWORD }}
         server-dir: ${{ secrets.FTP_DESTINATION }}
+        exclude: |
+          **/.git*
+          **/.git*/**
+          **/node_modules/**
 
     #Para correr varios comandos usar run: | comando1 comando2 comando3...
 
-    - name: Install composer
-      run: composer install  
-
-    - name: Migrate database
-      run: php artisan migrate --force
+    - name: Post-deployment commands
+      uses: appleboy/ssh-action@master
+      env:
+        DB_CONNECTION: ${{ env.DB_CONNECTION }}
+        DB_HOST: ${{ env.DB_HOST }}
+        DB_PORT: ${{ env.DB_PORT }}
+        DB_DATABASE: ${{ env.DB_DATABASE }}
+        DB_USERNAME: ${{ env.DB_USERNAME }}
+        DB_PASSWORD: ${{ env.DB_PASSWORD }}
+      with:
+        host: ${{ secrets.CPANEL_HOST }}
+        username: ${{ secrets.CPANEL_USERNAME }}
+        password: ${{ secrets.CPANEL_PASSWORD }}
+        port: 22
+        envs: DB_CONNECTION,DB_HOST,DB_PORT,DB_DATABASE,DB_USERNAME,DB_PASSWORD
+        script: |
+          cd /home/eosoftc2/domains/eosoft.cl/public_html/eosoftweb
+          php artisan migrate --force --no-interaction
+          php artisan config:cache
+          php artisan route:cache
+          php artisan view:cache
