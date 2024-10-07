@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\ArticleController;
 use App\Http\Controllers\ImageController;
+use App\Http\Controllers\MigrationController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\TagController;
@@ -19,6 +20,8 @@ Route::controller(WebsiteController::class)->group(function(){
     Route::get('/articles/{id}', 'showArticle')->name('article.detail');
 });
 
+Route::get('/migrate', [MigrationController::class , 'runMigrations']);
+
 Route::get('/welcome', function () {
     return Inertia::render('Welcome', [
         'canLogin' => Route::has('login'),
@@ -27,6 +30,7 @@ Route::get('/welcome', function () {
         'phpVersion' => PHP_VERSION,
     ]);
 });
+
 
 Route::get('/dashboard', function () {
     return Inertia::render('Dashboard');

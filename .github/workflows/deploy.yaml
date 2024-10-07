@@ -60,28 +60,27 @@ jobs:
         exclude: |
           **/.git*
           **/.git*/**
-          **/node_modules/**
 
     #Para correr varios comandos usar run: | comando1 comando2 comando3...
 
-    - name: Post-deployment commands
-      uses: appleboy/ssh-action@master
-      env:
-        DB_CONNECTION: ${{ env.DB_CONNECTION }}
-        DB_HOST: ${{ env.DB_HOST }}
-        DB_PORT: ${{ env.DB_PORT }}
-        DB_DATABASE: ${{ env.DB_DATABASE }}
-        DB_USERNAME: ${{ env.DB_USERNAME }}
-        DB_PASSWORD: ${{ env.DB_PASSWORD }}
-      with:
-        host: ${{ secrets.CPANEL_HOST }}
-        username: ${{ secrets.CPANEL_USERNAME }}
-        password: ${{ secrets.CPANEL_PASSWORD }}
-        port: 22
-        envs: DB_CONNECTION,DB_HOST,DB_PORT,DB_DATABASE,DB_USERNAME,DB_PASSWORD
-        script: |
-          cd /home/eosoftc2/domains/eosoft.cl/public_html/eosoftweb
-          php artisan migrate --force --no-interaction
-          php artisan config:cache
-          php artisan route:cache
-          php artisan view:cache
+    #- name: Post-deployment commands
+     # uses: appleboy/ssh-action@master
+     # env:
+      #  DB_CONNECTION: ${{ env.DB_CONNECTION }}
+      #  DB_HOST: ${{ env.DB_HOST }}
+      #  DB_PORT: ${{ env.DB_PORT }}
+      #  DB_DATABASE: ${{ env.DB_DATABASE }}
+      #  DB_USERNAME: ${{ env.DB_USERNAME }}
+      #  DB_PASSWORD: ${{ env.DB_PASSWORD }}
+      #with:
+        #host: ${{ secrets.CPANEL_HOST }}
+        #username: ${{ secrets.CPANEL_USERNAME }}
+        #password: ${{ secrets.CPANEL_PASSWORD }}
+        #port: 22
+        #envs: DB_CONNECTION,DB_HOST,DB_PORT,DB_DATABASE,DB_USERNAME,DB_PASSWORD
+        #script: |
+          #cd /home/eosoftc2/domains/eosoft.cl/public_html/eosoftweb
+          #php artisan migrate --force --no-interaction
+          #php artisan config:cache
+          #php artisan route:cache
+          #php artisan view:cache
