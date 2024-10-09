@@ -33,12 +33,13 @@ jobs:
         DB_DATABASE: ${{ env.DB_DATABASE }}
         DB_USERNAME: ${{ env.DB_USERNAME }}
         DB_PASSWORD: ${{ env.DB_PASSWORD }}
+        COMPOSER_ALLOW_SUPERUSER: 1
       with:
         host: ${{ secrets.SSH_HOST }}
         username: ${{ secrets.SSH_USERNAME }}
         password: ${{ secrets.SSH_PASSWORD }}
         port: ${{ secrets.SSH_PORT }}
-        envs: DB_CONNECTION,DB_HOST,DB_PORT,DB_DATABASE,DB_USERNAME,DB_PASSWORD
+        envs: DB_CONNECTION,DB_HOST,DB_PORT,DB_DATABASE,DB_USERNAME,DB_PASSWORD,COMPOSER_ALLOW_SUPERUSER
         script: |
           cd /var/www/eosoftweb
           git pull origin main
