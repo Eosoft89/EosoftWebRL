@@ -1,3 +1,5 @@
+#full deploy
+
 name: Laravel with React-Inertia deploy
 
 on:
@@ -22,6 +24,18 @@ jobs:
       uses: actions/checkout@v4
       with:
         fetch-depth: 0
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '20'
+
+    - name: Setup PHP
+      uses: shivammathur/setup-php@v2
+      with:
+        php-version: '8.3'
+        extensions: mbstring, bcmath, intl, pdo_mysql, xml
+
       # Sole ejecutar primera vez
 
     - name: Deploy #Full Deploy
@@ -40,14 +54,20 @@ jobs:
         port: ${{ secrets.SSH_PORT }}
         envs: DB_CONNECTION,DB_HOST,DB_PORT,DB_DATABASE,DB_USERNAME,DB_PASSWORD
         script: |
-          cd /var/www/eosoftweb
+          cd /var/www/html/eosoftweb
           git pull origin main
-          composer install --no-dev --prefer-dist --optimize-autoloader
+          composer install --no-dev --prefer-dist --no-scripts --no-progress --optimize-autoloader
           php artisan migrate --force --no-interaction
-          npm install --production
-          npm run build
+          npm ci && npm run build
+          chmod -R 755 storage bootstrap/cache
           php artisan cache:clear
           php artisan config:cache
           php artisan route:cache
           php artisan view:cache
           service nginx restart
+
+    # No excluí porque no puedo correr npm en mi hosting: **/node_modules/**
+
+    #Para correr varios comandos usar run: | comando1 comando2 comando3...
+
+    
