@@ -10,10 +10,6 @@ jobs:
     name: Deploy to Cloud Server
     runs-on: ubuntu-22.04
     env:
-        SSH_HOST: ${{ secrets.SSH_HOST }}
-        SSH_USERNAME: ${{ secrets.SSH_USERNAME }}
-        SSH_PASSWORD: ${{ secrets.SSH_PASSWORD }}
-        FTP_DESTINATION: ${{ secrets.REMOTE_PATH }}
         DB_CONNECTION: mysql
         DB_HOST: ${{ secrets.DB_HOST }}
         DB_PORT: ${{ secrets.DB_PORT }}
@@ -27,36 +23,27 @@ jobs:
       with:
         fetch-depth: 0
 
-    - name: Setup PHP
-      uses: shivammathur/setup-php@v2
-      with:
-        php-version: '8.3'
-
     - name: Setup Node.js
       uses: actions/setup-node@v4
       with:
         node-version: '20'
 
+    - name: Install Node.js dependencies
+        run: |
+          npm ci
+          npm run build 
+
+    - name: Setup PHP
+      uses: shivammathur/setup-php@v2
+      with:
+        php-version: '8.3'
+        extensions: mbstring, bcmath, intl, pdo_mysql, xml
+
+    - name: Install PHP dependencies
+        run: composer install --no-dev --prefer-dist --optimize-autoloader  
       # Sole ejecutar primera vez
 
-    #hasta aquí
-
-    - name: Deploy 
-      uses: milanmk/actions-file-deployer@master
-      with:
-        remote-protocol: sftp
-        remote-host: ${{ secrets.SSH_HOST }}
-        remote-port: ${{ secrets.SSH_PORT }}
-        remote-user: ${{ secrets.SSH_USERNAME }}
-        remote-password: ${{ secrets.SSH_PASSWORD }}
-        ssh-private-key: ${{ secrets.SSH_PASSWORD }}
-        remote-path: ${{ secrets.REMOTE_PATH }}
-          
-    # No excluí porque no puedo correr npm en mi hosting: **/node_modules/**
-
-    #Para correr varios comandos usar run: | comando1 comando2 comando3...
-
-    - name: Post-deployment commands
+    - name: Deploy
       uses: appleboy/ssh-action@master
       env:
         DB_CONNECTION: ${{ env.DB_CONNECTION }}
@@ -73,12 +60,19 @@ jobs:
         envs: DB_CONNECTION,DB_HOST,DB_PORT,DB_DATABASE,DB_USERNAME,DB_PASSWORD
         script: |
           cd /var/www/eosoftweb
-          sudo composer install --no-dev --prefer-dist --no-scripts --no-progress --no-suggest
-          sudo php artisan migrate --force --no-interaction
-          sudo npm ci
-          sudo npm run build
+          git pull origin main
+          composer install --no-dev --prefer-dist --no-scripts --no-progress --no-suggest --optimize-autoloader
+          php artisan migrate --force --no-interaction
+          npm ci && npm run build
           chmod -R 755 storage bootstrap/cache
-          sudo php artisan config:cache
-          sudo php artisan route:cache
-          sudo php artisan view:cache
-          sudo service nginx restart
+          php artisan cache:clear
+          php artisan config:cache
+          php artisan route:cache
+          php artisan view:cache
+          service nginx restart
+
+    # No excluí porque no puedo correr npm en mi hosting: **/node_modules/**
+
+    #Para correr varios comandos usar run: | comando1 comando2 comando3...
+
+    
