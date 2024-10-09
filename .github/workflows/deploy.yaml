@@ -28,15 +28,12 @@ jobs:
       with:
         node-version: '20'
 
-
     - name: Setup PHP
       uses: shivammathur/setup-php@v2
       with:
         php-version: '8.3'
         extensions: mbstring, bcmath, intl, pdo_mysql, xml
 
-    - name: Install PHP dependencies
-        run: composer install --no-dev --prefer-dist --optimize-autoloader  
       # Sole ejecutar primera vez
 
     - name: Deploy
