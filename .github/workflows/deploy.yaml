@@ -36,27 +36,19 @@ jobs:
         node-version: '20'
 
       # Sole ejecutar primera vez
-    - name: Install Composer dependencies
-      run: composer install --no-dev --prefer-dist --no-scripts --no-progress --no-suggest
 
-    - name: Set Directory Permissions
-      run: chmod -R 755 storage bootstrap/cache
-        
     #hasta aquí
 
     - name: Deploy 
-      uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+      uses: milanmk/actions-file-deployer@master
       with:
-        server: ${{ secrets.SSH_HOST }}
-        username: ${{ secrets.SSH_USERNAME }}
-        password: ${{ secrets.SSH_PASSWORD }}
-        server-dir: ${{ secrets.REMOTE_PATH }}
-        port: ${{ secrets.SSH_PORT }}
-        protocol: ftps
-        exclude: |
-          **/.git*
-          **/.git*/**
-          **/node_modules/**
+        remote-protocol: sftp
+        remote-host: ${{ secrets.SSH_HOST }}
+        remote-port: ${{ secrets.SSH_PORT }}
+        remote-user: ${{ secrets.SSH_USERNAME }}
+        remote-password: ${{ secrets.SSH_PASSWORD }}
+        ssh-private-key: ${{ secrets.SSH_PASSWORD }}
+        remote-path: ${{ secrets.REMOTE_PATH }}
           
     # No excluí porque no puedo correr npm en mi hosting: **/node_modules/**
 
@@ -79,9 +71,11 @@ jobs:
         envs: DB_CONNECTION,DB_HOST,DB_PORT,DB_DATABASE,DB_USERNAME,DB_PASSWORD
         script: |
           cd /var/www/eosoftweb
+          sudo composer install --no-dev --prefer-dist --no-scripts --no-progress --no-suggest
           sudo php artisan migrate --force --no-interaction
           sudo npm ci
           sudo npm run build
+          chmod -R 755 storage bootstrap/cache
           sudo php artisan config:cache
           sudo php artisan route:cache
           sudo php artisan view:cache
