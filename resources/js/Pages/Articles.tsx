@@ -9,7 +9,7 @@ function Articles({}: Props) {
         <MainLayout>
             <Head title='Articles'/>
             <h2>Articles</h2>
-            <p>No data</p>
+            <p>No data in database</p>
         </MainLayout>
     )
 }
