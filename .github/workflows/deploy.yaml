@@ -52,7 +52,7 @@ jobs:
         port: ${{ secrets.SSH_PORT }}
         envs: DB_CONNECTION,DB_HOST,DB_PORT,DB_DATABASE,DB_USERNAME,DB_PASSWORD
         script: |
-          cd /var/www/eosoftweb
+          cd /var/www/html/eosoftweb
           git pull origin main
           composer install --no-dev --prefer-dist --no-scripts --no-progress --optimize-autoloader
           php artisan migrate --force --no-interaction
