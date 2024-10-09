@@ -54,7 +54,7 @@ jobs:
         script: |
           cd /var/www/eosoftweb
           git pull origin main
-          composer install --no-dev --prefer-dist --no-scripts --no-progress --no-suggest --optimize-autoloader
+          composer install --no-dev --prefer-dist --no-scripts --no-progress --optimize-autoloader
           php artisan migrate --force --no-interaction
           npm ci && npm run build
           chmod -R 755 storage bootstrap/cache
