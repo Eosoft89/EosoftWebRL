@@ -28,8 +28,6 @@ jobs:
       with:
         node-version: '20'
 
-    - name: Install Node.js dependencies
-        run: npm ci && npm run build 
 
     - name: Setup PHP
       uses: shivammathur/setup-php@v2
