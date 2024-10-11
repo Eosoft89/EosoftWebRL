@@ -20,8 +20,6 @@ Route::controller(WebsiteController::class)->group(function(){
     Route::get('/articles/{id}', 'showArticle')->name('article.detail');
 });
 
-Route::get('/migrate', [MigrationController::class , 'runMigrations']);
-
 Route::get('/welcome', function () {
     return Inertia::render('Welcome', [
         'canLogin' => Route::has('login'),
