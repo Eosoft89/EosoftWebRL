@@ -12,7 +12,7 @@ function MainLayout({children}: Props) {
     const brandUrl = `${window.location.origin}/storage/images/Navbrand.jpg`;
 
     return (
-        <div>
+        <>
             <Navbar expand="lg" className="bg-body-secondary shadow" fixed="top">
             <Container fluid>
                 <Link className='navbar-brand ml-8' href={route('home')}> 
@@ -56,7 +56,7 @@ function MainLayout({children}: Props) {
                 <br /><br /><br /> <br /><br />
                 { children }
             </main>*/}
-        </div>
+        </>
     )
 }
 

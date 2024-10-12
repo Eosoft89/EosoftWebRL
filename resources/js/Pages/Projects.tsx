@@ -17,15 +17,13 @@ function Projects({projects}: Props) {
 
     return (
         <MainLayout>
-            
+             <br /> <br /> <br /> <br /> <br />
             <Head title='Projects'/>
-            <br /> <br /> <br /> <br /> <br />
-
             <Container>
                 <h2>Proyectos</h2>
                 <Row>
                 {projects.map((project) => 
-                    <Col lg={3} md={6} xs={12} className='bg-success p-1 d-flex justify-content-center align-items-center' key={project.id}>     
+                    <Col lg={3} md={6} xs={12} className='p-1 d-flex justify-content-center align-items-center' key={project.id}>     
                         <FadeContainer timeToAppear={timeToAppear += 120} timeout={500}>
                             <Card style={{ width: '20rem', height:'32rem' }} >
                                 <Card.Img variant="top" src={project.cover_url} alt={'Portada del proyecto' + project.title}/>
