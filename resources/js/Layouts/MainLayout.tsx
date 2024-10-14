@@ -47,6 +47,9 @@ function MainLayout({children}: Props) {
                         <a className='fs-4 mr-4' href='https://www.linkedin.com/in/eric-rojas-montesino'>
                             <i className="bi bi-linkedin"></i>
                         </a>
+                        <a className='fs-4 mr-4' href='mailto:ericrojas.ing@gmail.com'>
+                            <i className="bi bi-envelope-fill"></i>
+                        </a>
                         <NavLink href={route('admin')} active={false}>
                             <i className="bi bi-gear-fill"></i> Admin 
                         </NavLink>

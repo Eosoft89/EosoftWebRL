@@ -22,7 +22,7 @@ class WebsiteController extends Controller
 
     public function showProject(string $id)
     {
-        $project = Project::with('cover')->findOrFail($id);
+        $project = Project::with('cover', 'tags')->findOrFail($id);
 
         return Inertia::render('ProjectDetail', [
             'title' => $project->title,
@@ -33,18 +33,17 @@ class WebsiteController extends Controller
 
     public function articles()
     {
-        $articles = Article::with('cover')->get();
-        return Inertia::render('Articles', ['articles' => $this->getRegistersWithCover($articles)]);
+        $articles = Article::with('tags')->get();
+        $articles->each->append('cover_url');
+        return Inertia::render('Articles', ['articles' => $articles]);
     }
 
     public function showArticle(string $id)
     {
-        $article = Article::with('cover')->findOrFail($id);
-        return Inertia::render('ArticleDetail', [
-            'title' => $article->title,
-            'content' => $article->content,
-            'cover_url' => $article->cover ? asset('store/images/' . $article->cover->url) : null
-        ]);
+        $article = Article::with('tags')->findOrFail($id);
+        $article->append('cover_url');
+
+        return Inertia::render('ArticleDetail', $article);
     }
 
     private function getRegistersWithCover(Collection $registers){
@@ -55,7 +54,8 @@ class WebsiteController extends Controller
                     'id' => $register->id,
                     'title' => $register->title,
                     'content' => $register->content,
-                    'cover_url' => $register->cover ? asset('storage/images/' . $register->cover->url) : null     
+                    'cover_url' => $register->cover ? asset('storage/images/' . $register->cover->url) : null,
+                    'tags' => $register->tags     
                 ];
             }
         )->toArray();

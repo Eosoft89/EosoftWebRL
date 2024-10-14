@@ -22,4 +22,9 @@ class Article extends Model
         return $this->morphToMany(Tag::class, 'taggable');
     }
 
+    public function getCoverUrlAttribute()
+    {
+        return $this->cover ? asset('storage/images/' . $this->cover->url) : null;
+    }
+
 }
