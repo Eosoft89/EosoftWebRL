@@ -10,7 +10,7 @@ function Home({}: Props) {
     return (
         <MainLayout>
 
-            <Head title='Eric Rojas'/>
+            <Head title='Inicio'/>
 
              <Container className="d-flex flex-column align-items-center justify-content-center full-min-height">
                 <div className='text-center'>
@@ -35,7 +35,7 @@ function Home({}: Props) {
                         </div>
                     </FadeContainer>
                     
-                    <FadeContainer timeToAppear={2000} timeout={2000}>
+                    <FadeContainer timeToAppear={2000} timeout={2000} className='mt-1'>
                         <Badge className='fs-5 me-1'>Y mucho más...</Badge>
                     </FadeContainer>
 

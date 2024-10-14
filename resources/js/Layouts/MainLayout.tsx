@@ -30,19 +30,25 @@ function MainLayout({children}: Props) {
                 
                 </Nav>
                 <Form className="d-flex">
-                <Form.Control
-                type="search"
-                placeholder="Buscar"
-                className="me-2"
-                aria-label="Search"
-                />
-                <Button className='shadow'>Buscar</Button>
-                </Form>
-                </Navbar.Collapse>
+                    <Form.Control
+                    type="search"
+                    placeholder="Buscar"
+                    className="me-2"
+                    aria-label="Search"
+                    />
+                    <Button className='shadow'>Buscar</Button>
+                    </Form>
+                    </Navbar.Collapse>
                 <Navbar.Collapse className="justify-content-end">
                     <Nav>
+                        <a className='fs-4 mr-4' href='https://github.com/Eosoft89'>
+                            <i className="bi bi-github"></i>
+                        </a>
+                        <a className='fs-4 mr-4' href='https://www.linkedin.com/in/eric-rojas-montesino'>
+                            <i className="bi bi-linkedin"></i>
+                        </a>
                         <NavLink href={route('admin')} active={false}>
-                        <i className="bi bi-gear-fill"></i> Admin 
+                            <i className="bi bi-gear-fill"></i> Admin 
                         </NavLink>
                     </Nav> 
                 </Navbar.Collapse>
