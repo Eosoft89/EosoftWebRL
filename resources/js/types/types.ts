@@ -4,6 +4,8 @@ export type ProjectProps = {
     content: string;
     cover_url: string | undefined;
     tags: TagProps[];
+    created_at: string;
+    updated_at: string;
 }
 
 export type ArticleProps = ProjectProps;

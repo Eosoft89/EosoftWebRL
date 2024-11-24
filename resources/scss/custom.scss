@@ -4,6 +4,32 @@
 
 // Sobrescribe las variables de Bootstrap aquí
 $primary: #2f0fe7;
+$project-card-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+$project-card-transition: all 0.3s ease;
+$tech-gradient-start: rgba(0, 0, 0, 0.7);
+$tech-gradient-end: rgba(0, 0, 0, 0);
+
+
+// Efecto de hover para las cards
+.project-card {
+    transition: all 0.3s ease;
+    
+    &:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15) !important;
+    }
+  }
+  
+  // Gradiente para el área de tecnologías
+  .tech-gradient {
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0));
+  }
+  
+  // Estilo para las imágenes de cover
+  .project-cover {
+    height: 200px;
+    object-fit: cover;
+  }
 
 // Importa Bootstrap después de definir las variables personalizadas
 @import "node_modules/bootstrap/scss/bootstrap";

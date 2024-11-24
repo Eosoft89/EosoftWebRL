@@ -27,7 +27,8 @@ class WebsiteController extends Controller
         return Inertia::render('ProjectDetail', [
             'title' => $project->title,
             'content' => $project->content,
-            'cover_url' => $project->cover ? asset('storage/images/' . $project->cover->url) : null 
+            'cover_url' => $project->cover ? asset('storage/images/' . $project->cover->url) : null,
+            'tags' => $project->tags
         ]);
     }
 
