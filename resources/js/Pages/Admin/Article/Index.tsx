@@ -33,7 +33,7 @@ function Index ({auth, articles, flash}: Props) {
                 {articles.length == 0 ? 
                     <p>Sin registros</p>
                     :
-                    <Table striped bordered hover>
+                    <Table striped bordered hover responsive>
                         <thead>
                             <tr>
                                 <th>#</th>
