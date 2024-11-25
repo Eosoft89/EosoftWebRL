@@ -44,8 +44,14 @@ function Home({}: Props) {
         
              <Container className="d-flex align-items-center full-min-height">
                 <div>
-                    <p className='fs-2 fw-bold'>Un poco de mi historia...</p>
-                    <p className='fs-5'>Nací en un pequeño pueblo de la Comuna de Colbún, llamado Paso Rari. Desde pequeño siempre tuve una mente muy curiosa, interesándome por muchos temas distintos, la gran mayoría relacionados a las Ciencias...</p>
+                    <p className='fs-2 fw-bold'>Perfil...</p>
+                    <p className='fs-5'>
+                        Soy un profesional con más de diez años de experiencia en diseño y desarrollo Full Stack de software, 
+                        además cuento con conocimientos en ciencia de datos. Me considero una persona cordial, responsable, proactiva, 
+                        adaptable y comprometida con mi trabajo y profesión, con gran capacidad analítica y habilidad para diseñar y 
+                        desarrollar software robusto y escalable. Estoy constantemente mejorando mis conocimientos y cuento con 
+                        grandes cualidades para el liderazgo y el trabajo en equipo.
+                    </p>
                 </div>
              </Container>
 
